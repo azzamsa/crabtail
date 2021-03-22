@@ -1,1 +1,10 @@
-/target
+dist
+node_modules
+bin
+pkg
+target
+wasm-pack.log
+
+src/generated/**
+
+css/compiled.scss
