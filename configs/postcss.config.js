@@ -10,7 +10,10 @@ module.exports = ( ctx ) => {
 
   console.log("postcss ctx.env: " + ctx.env);
   return {
+    // allow inline comment in SASS
+    syntax: 'postcss-scss',
     plugins: [
+      require("postcss-import"),
       require("tailwindcss")('configs/tailwind.config.js'),
       require("autoprefixer"),
       require("postcss-typed-css-classes")({
@@ -26,6 +29,10 @@ module.exports = ( ctx ) => {
           }
         }
       }),
+      // require("postcss-import")({
+      //   from: "sass/main.scss"
+      // }),
+      
     ]
   };
 };

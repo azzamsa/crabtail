@@ -31,7 +31,74 @@ fn update(_: Msg, _: &mut Model, _: &mut impl Orders<Msg>) {}
 // ------ ------
 
 fn view(_: &Model) -> impl IntoNodes<Msg> {
-    div![p![C![C.text_green_500], "Hello world!"]]
+    vec![
+        header![
+            C![C.max_w_lg, C.mx_auto],
+            h1![C![C.font_bold, C.text_white C.text_center], "tail2rs"]
+        ],
+        main![
+            C![
+                C.bg_white,
+                C.max_w_lg,
+                C.mx_auto,
+                C.p_8,
+                C.md__p_12,
+                C.my_10,
+                C.rounded_lg,
+                C.shadow_2xl
+            ],
+            section![p![
+                C![C.text_center, C.text_gray_600, C.pt_0],
+                "Convert your TailwindCSS class to typed Rust"
+            ]],
+            section![
+                C![C.flex, C.flex_col, C.mt_10],
+                div![
+                    C![C.mb_6, C.pt_3, C.rounded, C.bg_gray_200],
+                    label![
+                        C![
+                            C.block,
+                            C.text_gray_700,
+                            C.text_sm,
+                            C.font_bold,
+                            C.mb_2,
+                            C.ml_3
+                        ],
+                        "CSS"
+                    ],
+                    input![
+                        id!["css"],
+                        attrs! {
+                            At::Type => "text"
+                        },
+                        C!["input"],
+                    ]
+                ],
+                div![
+                    C![C.mb_6, C.pt_3, C.rounded, C.bg_gray_200],
+                    label![
+                        C![
+                            C.block,
+                            C.text_gray_700,
+                            C.text_sm,
+                            C.font_bold,
+                            C.mb_2,
+                            C.ml_3
+                        ],
+                        "Typed"
+                    ],
+                    input![
+                        id!["typed"],
+                        attrs! {
+                            At::Type => "text"
+                        },
+                        C!["input"]
+                    ]
+                ],
+                button![C!["btn"], "Go 🚀",]
+            ],
+        ],
+    ]
 }
 
 // ------ ------

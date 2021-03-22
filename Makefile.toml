@@ -14,7 +14,7 @@ script = [
 description = "Start server"
 install_crate = { crate_name = "trunk", binary = "trunk", test_arg = "-V" }
 command = "trunk"
-args = ["serve", "--open"]
+args = ["serve"]
 dependencies = ["prepare"]
 
 # ---- BUILD ----
@@ -23,19 +23,19 @@ dependencies = ["prepare"]
 description = "Build with trunk"
 install_crate = { crate_name = "trunk", binary = "trunk", test_arg = "-V" }
 command = "trunk"
-args = ["--config", "Trunk.toml", "build"]
+args = ["build"]
 dependencies = ["prepare_release"]
 
 [tasks.prepare]
 description = "Prepare asset"
 install_crate = { crate_name = "trunk", binary = "trunk", test_arg = "-V" }
 command = "npx"
-args = ["postcss", "--config", "configs/postcss.config.js", "css/styles.scss", "--output", "css/compiled.scss"]
+args = ["postcss", "--config", "configs/postcss.config.js", "sass/main.scss", "--output", "sass/compiled.scss"]
 
 [tasks.prepare_release]
 description = "Prepare asset for release"
 command = "npx"
-args = ["postcss", "--config", "postcss.config.js", "css/styles.scss", "--output", "css/compiled.scss", "--env", "production"]
+args = ["postcss", "--config", "configs/postcss.config.js", "sass/main.scss", "--output", "sass/compiled.scss", "--env", "production"]
 
 # ---- LINT ----
 

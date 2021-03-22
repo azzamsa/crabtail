@@ -7,4 +7,4 @@ wasm-pack.log
 
 src/generated/**
 
-css/compiled.scss
+sass/compiled.scss
