@@ -11,8 +11,7 @@ module.exports = {
    * @returns Set of class names
    */
   getUsedCssClasses: function () {
-    return new Set([...getUsedCssClassesInRust(),
-                   ...getUsedCustomCssClassesInRust()])
+    return new Set([...getUsedCssClassesInRust(), ...getUsedCustomCssClassesInRust()])
   },
 }
 
@@ -95,7 +94,6 @@ function getUsedCssClassesInRust() {
   return usedCssClasses
 }
 
-
 /**
  * Search in Rust files for `C!["input-label"]`.
  *
@@ -112,7 +110,7 @@ function getUsedCustomCssClassesInRust() {
     const usedCssClassesInFile = fileContent.match(/C\!\["[a-zA-Z0-9_-]+"]/g) || []
     usedCssClassesInFile
       // remove prefix `C!["` and `"]` suffix
-      .map((class_) => class_.slice(4,-2))
+      .map((class_) => class_.slice(4, -2))
       // add class to set
       .forEach((class_) => usedCssClasses.add(class_))
   })
