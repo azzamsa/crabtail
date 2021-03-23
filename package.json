@@ -1,5 +1,5 @@
 {
-  "name": "tail2rs",
+  "name": "crabtail",
   "version": "0.1.0",
   "description": "Convert your TailwindCSS class to typed Rust",
   "author": "Azzam S.A",

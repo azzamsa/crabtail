@@ -34,7 +34,7 @@ fn view(_: &Model) -> impl IntoNodes<Msg> {
     vec![
         header![
             C![C.max_w_lg, C.mx_auto],
-            h1![C![C.font_bold, C.text_white C.text_center], "tail2rs"]
+            h1![C![C.font_bold, C.text_white C.text_center], "CrabTail"]
         ],
         main![
             C![
@@ -49,7 +49,7 @@ fn view(_: &Model) -> impl IntoNodes<Msg> {
             ],
             section![p![
                 C![C.text_center, C.text_gray_600, C.pt_0],
-                "Convert your TailwindCSS class to typed Rust"
+                 "Convert your TailwindCSS 💨 class to typed Rust 🦀",
             ]],
             section![
                 C![C.flex, C.flex_col, C.mt_10],

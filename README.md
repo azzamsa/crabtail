@@ -1,3 +1,3 @@
-# tail2rs
+# CrabTail
 
-Convert your TailwindCSS class to typed Rust
+Convert your TailwindCSS 💨 class to typed Rust 🦀

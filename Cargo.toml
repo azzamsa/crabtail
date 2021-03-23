@@ -1,5 +1,5 @@
 [package]
-name = "tail2rs"
+name = "crabtail"
 version = "0.1.0"
 authors = ["azzamsa <me@azzamsa.com>"]
 description = "Convert your TailwindCSS class to typed Rust"

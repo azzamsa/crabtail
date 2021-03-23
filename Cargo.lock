@@ -73,6 +73,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "crabtail"
+version = "0.1.0"
+dependencies = [
+ "seed",
+ "voca_rs",
+ "wasm-bindgen-test",
+]
+
+[[package]]
 name = "dbg"
 version = "1.0.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -630,15 +639,6 @@ dependencies = [
  "proc-macro2",
  "quote",
  "unicode-xid",
-]
-
-[[package]]
-name = "tail2rs"
-version = "0.1.0"
-dependencies = [
- "seed",
- "voca_rs",
- "wasm-bindgen-test",
 ]
 
 [[package]]
