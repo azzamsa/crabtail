@@ -1,4 +1,4 @@
-image: alpine/3.13
+image: ubuntu/focal
 
 sources:
   - https://git.sr.ht/~azzamsa/crabtail
@@ -6,9 +6,9 @@ sources:
 packages:
   - nodejs
   - yarn
-  - rustup
-  - openssl-dev # cargo-make needs
-  - wget
+  # cargo-make needs these
+  - pkg-config
+  - libssl-dev
 
 environment:
   project: crabtail
@@ -22,7 +22,7 @@ tasks:
       cd ${project}
 
       # install rustup
-      rustup-init -y --profile minimal
+      curl https://sh.rustup.rs -sSf | sh -s -- -y
       export PATH="$HOME/.cargo/bin:$PATH"
 
       # install Rust stable
@@ -34,10 +34,17 @@ tasks:
       rustup component add rustfmt --toolchain nightly
 
       # install JS depedencies
-      yarn global add npx
+      # locally isnstalled yarn is too old
+      cargo install fnm
+      eval "$(fnm env)"
+      fnm install v14.15.4
+      fnm use v14.15.4
+      fnm default v14.15
+
+      npm install -g yarn
+      yarn global add npx prettier
       export PATH="$HOME/.yarn/bin:$PATH"
       yarn install
 
       # test
       cargo make verify_only
-

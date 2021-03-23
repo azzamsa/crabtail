@@ -1,3 +1,6 @@
+[env]
+PORT = "8080"
+
 [config]
 skip_core_tasks = true
 
@@ -5,11 +8,11 @@ skip_core_tasks = true
 
 [tasks.verify]
 description = "Format, lint with Clippy and run tests"
-dependencies = ["fmt", "clippy"]
+dependencies = ["fmt", "clippy", "fmt_prettier"]
 
 [tasks.verify_only]
 description = "Like `verify`, but fails if the code isn't formatted. Primarily for CI."
-dependencies = ["fmt_check", "clippy", "test_h_firefox"]
+dependencies = ["fmt_check", "clippy", "fmt_prettier_check", "test_h_firefox"]
 
 # ---- BASIC ----
 
@@ -27,13 +30,20 @@ command = "trunk"
 args = ["serve"]
 dependencies = ["prepare"]
 
+[tasks.serve_release]
+description = "Start real web server"
+install_crate = { crate_name = "microserver", binary = "microserver", test_arg = "-h" }
+command = "microserver"
+args = ["dist/", "--port", "${PORT}"]
+dependencies = ["build_release"]
+
 # ---- BUILD ----
 
-[tasks.build]
+[tasks.build_release]
 description = "Build with trunk"
 install_crate = { crate_name = "trunk", binary = "trunk", test_arg = "-V" }
 command = "trunk"
-args = ["build"]
+args = ["build", "--release"]
 dependencies = ["prepare_release"]
 
 [tasks.prepare]
@@ -66,6 +76,15 @@ extend = "fmt"
 description = "Check format with nightly rustfmt"
 args = ["fmt", "--all", "--", "--check"]
 
+[tasks.fmt_prettier]
+description = "Format with prettier"
+command = "prettier"
+args = ["--config", "configs/prettier.config.js", "--ignore-path", "configs/prettierignore", "--write", "."]
+
+[tasks.fmt_prettier_check]
+description = "Check format with prettier"
+command = "prettier"
+args = ["--config", "configs/prettier.config.js", "--ignore-path", "configs/prettierignore", "--check", "."]
 
 # ---- TEST ----
 

@@ -1,4 +1,4 @@
-image: alpine/3.13
+image: ubuntu/focal
 
 sources:
   - https://git.sr.ht/~azzamsa/crabtail
@@ -6,22 +6,23 @@ sources:
 packages:
   - nodejs
   - yarn
-  - rustup
-  - openssl-dev
+  # cargo-make needs these
+  - pkg-config
+  - libssl-dev
 
 environment:
   project: crabtail
 
 secrets:
   - 1cf349b2-4fe8-4fbe-9640-a9c79b447ee1 # Netlify auth token
-  - 20ebe8c5-7bbd-406e-8027-320d12e841ac # Netlify site id
+  - 9db67c26-4aa9-454f-a2fd-3b126c262096 # Netlify site id
 
 tasks:
   - deploy: |
       cd ${project}
 
       # install rustup
-      rustup-init -y --profile minimal
+      curl https://sh.rustup.rs -sSf | sh -s -- -y
       export PATH="$HOME/.cargo/bin:$PATH"
 
       # install Rust stable
@@ -29,18 +30,26 @@ tasks:
       cargo install --force cargo-make --version 0.32.14
 
       # install JS depedencies
-      yarn global add npx
+      # locally isnstalled yarn is too old
+      cargo install fnm
+      eval "$(fnm env)"
+      fnm install v14.15.4
+      fnm use v14.15.4
+      fnm default v14.15
+
+      npm install -g yarn
+      yarn global add npx prettier
       export PATH="$HOME/.yarn/bin:$PATH"
       yarn install
 
       # build
       cargo install wasm-bindgen-cli --version 0.2.72
-      cargo make build
+      cargo make build_release
 
       # deploy
       set +x
       NETLIFY_AUTH_TOKEN=$(cat ~/.NETLIFY_AUTH_TOKEN)
       NETLIFY_SITE_ID=$(cat ~/.NETLIFY_CRABTAIL_ID)
 
-      sudo yarn global add --unsafe-perm=true netlify-cli@3.11.0
-      netlify deploy --site $NETLIFY_CRABTAIL_ID --auth $NETLIFY_AUTH_TOKEN --prod --dir ./dist
+      yarn global add --unsafe-perm=true netlify-cli@3.11.0
+      netlify deploy --site $NETLIFY_SITE_ID --auth $NETLIFY_AUTH_TOKEN --prod --dir ./dist
