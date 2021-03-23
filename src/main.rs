@@ -60,7 +60,7 @@ fn view(model: &Model) -> impl IntoNodes<Msg> {
             C.md__pt_20,
             C.pb_6,
             C.px_2,
-            C.md__px_0,
+            C.md__px_5,
             C.min_h_screen
         ],
         header![
