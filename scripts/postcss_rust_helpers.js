@@ -5,8 +5,6 @@ const fs = require("fs")
 // Helpers are used by `configs/postcss.config.js`.
 
 module.exports = {
-  escapeClassName: escapeClassName,
-
   /**
    * Search in Rust and Handlebars files for CSS classes.
    *
@@ -119,23 +117,4 @@ function getUsedCustomCssClassesInRust() {
       .forEach((class_) => usedCssClasses.add(class_))
   })
   return usedCssClasses
-}
-
-
-
-/**
- * Transform css class name into indentifier that can be used as Rust struct field name.
- * (see https://github.com/MartinKavik/postcss-typed-css-classes/blob/master/generators/rust_generator.js)
- *
- * @param {string} name
- * @returns string Escaped class name
- */
-function escapeClassName(name) {
-  name = name.replace(/-/g, "_")
-  name = name.replace(/:/g, "__")
-  name = name.replace(/\//g, "of")
-  if (getKeywords().indexOf(name) > -1) {
-    name += "_"
-  }
-  return name
 }

@@ -19,7 +19,7 @@ module.exports = (ctx) => {
         generator: "rust",
         filter: (class_) => {
           if (ctx.env === "production") {
-            return usedCssClasses.has(postcssRustHelpers.escapeClassName(class_))
+            return usedCssClasses
           } else {
             return true
           }
