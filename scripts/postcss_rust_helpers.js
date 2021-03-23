@@ -15,7 +15,6 @@ module.exports = {
     getUsedCssClasses: function() {
         return new Set([
             ...getUsedCssClassesInRust(),
-            ...getUsedCssClassesInHandlebars()
         ])
     }
 }
@@ -85,7 +84,7 @@ function getKeywords () {
 function getUsedCssClassesInRust() {
     const usedCssClasses = new Set;
     // search in Rust files
-    const files = findFiles.fileSync(/\.rs$/, './crate/src');
+    const files = findFiles.fileSync(/\.rs$/, './src');
     files.forEach(filePath => {
         const fileContent = fs.readFileSync(filePath, 'utf8')
         // example of a used class in Rust code is `C.mb_16`
@@ -96,37 +95,6 @@ function getUsedCssClassesInRust() {
             // add class to set
             .forEach(class_ => usedCssClasses.add(class_))
     })
-    return usedCssClasses
-}
-
-/**
- * Search in Handlebar templates for CSS classes.
- *
- * @returns usedCssClasses Set of class names
- */
-function getUsedCssClassesInHandlebars() {
-    const usedCssClasses = new Set;
-    // search in Handlebars templates
-    const files = findFiles.fileSync(/\.hbs$/, './entries');
-    files.forEach(filePath => {
-        const fileContent = fs.readFileSync(filePath, 'utf8')
-        // example of a used class in HTML code is `class="mb-16 text-blue-1"` or `class='font-bold'`
-        // Note: We cannot use capturing group because of `/g`
-        const classAttribute = fileContent.match(/class\s*=\s*['|"][^'|"]+['|"]/g) || []
-        classAttribute
-            // extract classes from from attribute (i.e. class="one two" => "one two"
-            .map(classAttribute => classAttribute.match(/class\s*=\s*['|"]([^'|"]+)['|"]/)[1])
-            .forEach(content => {
-                // split classes
-                const classes = content.match(/\S+/g) || []
-                    classes
-                        // transform classes to Rust form
-                        .map(escapeClassName)
-                        // add class to set
-                        .forEach(class_ => usedCssClasses.add(class_))
-            })
-    })
-
     return usedCssClasses
 }
 
