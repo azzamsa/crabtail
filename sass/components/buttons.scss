@@ -13,3 +13,7 @@
     @apply outline-none border-yellow-600;
   }
 }
+
+.input-label{
+  @apply block text-gray-700 text-sm font-bold mb-2 ml-3
+}
