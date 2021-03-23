@@ -1,5 +1,3 @@
-#![allow(clippy::wildcard_imports)]
-
 mod generated;
 mod transform;
 

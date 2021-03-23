@@ -43,4 +43,5 @@ tasks:
       yarn install
 
       # test
+      cargo make build_release
       cargo make verify_only
