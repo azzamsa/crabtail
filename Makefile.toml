@@ -1,6 +1,16 @@
 [config]
 skip_core_tasks = true
 
+# ---- GENERAL ----
+
+[tasks.verify]
+description = "Format, lint with Clippy and run tests"
+dependencies = ["fmt", "clippy"]
+
+[tasks.verify_only]
+description = "Like `verify`, but fails if the code isn't formatted. Primarily for CI."
+dependencies = ["fmt_check", "clippy", "test_h_firefox"]
+
 # ---- BASIC ----
 
 [tasks.clean]
@@ -58,6 +68,11 @@ args = ["fmt", "--all", "--", "--check"]
 
 
 # ---- TEST ----
+
+[tasks.test_h_firefox]
+description = "Run headless tests with Firefox."
+extend = "test"
+args = ["test", "--headless", "--firefox"]
 
 [tasks.test_h]
 description = "Run headless tests. Ex: 'cargo make test_h firefox'. Test envs: [chrome, firefox, safari]"
