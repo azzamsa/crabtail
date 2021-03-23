@@ -13,10 +13,6 @@ packages:
 environment:
   project: crabtail
 
-secrets:
-  - 1cf349b2-4fe8-4fbe-9640-a9c79b447ee1 # Netlify auth token
-  - 20ebe8c5-7bbd-406e-8027-320d12e841ac # Netlify site id
-
 tasks:
   - test: |
       cd ${project}
