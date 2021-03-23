@@ -15,6 +15,15 @@ fn init(_: Url, _: &mut impl Orders<Msg>) -> Model {
     Model {
         css_input: "".to_string(),
         css_typed: "".to_string(),
+        first_textarea: TextArea {
+            label: "CSS".to_string(),
+            placeholder: "py-2 text-white hover:bg-yellow-500".to_string(),
+        },
+        second_textarea: TextArea {
+            label: "Typed".to_string(),
+            placeholder: "C.py_2, C.text_white, C.hover__bg_yellow_500".to_string(),
+        },
+        swapped_label: false,
     }
 }
 
@@ -26,6 +35,14 @@ fn init(_: Url, _: &mut impl Orders<Msg>) -> Model {
 struct Model {
     css_input: String,
     css_typed: String,
+    first_textarea: TextArea,
+    second_textarea: TextArea,
+    swapped_label: bool,
+}
+
+struct TextArea {
+    label: String,
+    placeholder: String,
 }
 
 // ------ ------
@@ -35,16 +52,50 @@ struct Model {
 enum Msg {
     Transform,
     CSSInputChanged(String),
+    Swap,
 }
 
 fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
     let css_input = &mut model.css_input;
     let css_typed = &mut model.css_typed;
+    let swapped_label = &mut model.swapped_label;
+    let first_textarea = &mut model.first_textarea;
+    let second_textarea = &mut model.second_textarea;
+
     match msg {
         Msg::CSSInputChanged(input) => {
             *css_input = input;
         }
-        Msg::Transform => *css_typed = transform::transform(css_input),
+        Msg::Transform => {
+            if *swapped_label {
+                *css_typed = transform::to_css(css_input);
+            } else {
+                *css_typed = transform::to_typed(css_input);
+            }
+        }
+        Msg::Swap => {
+            if *swapped_label {
+                *first_textarea = TextArea {
+                    label: "CSS".to_string(),
+                    placeholder: "py-2 text-white hover:bg-yellow-500".to_string(),
+                };
+                *second_textarea = TextArea {
+                    label: "Typed".to_string(),
+                    placeholder: "C.py_2, C.text_white, C.hover__bg_yellow_500".to_string(),
+                };
+                *swapped_label = false;
+            } else {
+                *first_textarea = TextArea {
+                    label: "Typed".to_string(),
+                    placeholder: "C.py_2, C.text_white, C.hover__bg_yellow_500".to_string(),
+                };
+                *second_textarea = TextArea {
+                    label: "CSS".to_string(),
+                    placeholder: "py-2 text-white hover:bg-yellow-500".to_string(),
+                };
+                *swapped_label = true;
+            }
+        }
     }
 }
 
@@ -86,12 +137,12 @@ fn view(model: &Model) -> impl IntoNodes<Msg> {
                 C![C.flex, C.flex_col, C.mt_10],
                 div![
                     C![C.mb_6, C.pt_3, C.rounded, C.bg_gray_200],
-                    label![C!["input-label"], "CSS"],
+                    label![C!["input-label"], &model.first_textarea.label],
                     textarea![
                         id!["css"],
                         attrs! {
                             At::Type => "text",
-                            At::Placeholder => "py-2 text-white hover:bg-blue-light";
+                            At::Placeholder => &model.first_textarea.placeholder;
 
                         },
                         C!["input"],
@@ -100,14 +151,30 @@ fn view(model: &Model) -> impl IntoNodes<Msg> {
                 ],
                 div![
                     C![C.mb_6, C.pt_3, C.rounded, C.bg_gray_200],
-                    label![C!["input-label"], "Typed"],
+                    label![C!["input-label"], &model.second_textarea.label],
                     textarea![
                         id!["typed"],
                         attrs! {
                             At::Type => "text"
+                                At::Placeholder => &model.second_textarea.placeholder;
                             At::Value => model.css_typed;
                         },
                         C!["input"],
+                    ]
+                ],
+                div![
+                    C![C.flex, C.justify_end],
+                    button![
+                        C![
+                            "btn",
+                            C.mb_6,
+                            C.px_3,
+                            C.py_1,
+                            C.hover__text_yellow_700,
+                            C.hover__underline
+                        ],
+                        ev(Ev::Click, |_| Msg::Swap),
+                        "\u{1f500}"
                     ]
                 ],
                 button![C!["btn"], ev(Ev::Click, |_| Msg::Transform), "Go \u{1f680}"]

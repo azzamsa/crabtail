@@ -1,6 +1,6 @@
 use voca_rs::*;
 
-pub fn transform(input: &str) -> String {
+pub fn to_typed(input: &str) -> String {
     let classes = split::split(input, " ");
     let classes_underscored = classes
         .iter()
@@ -14,36 +14,49 @@ pub fn transform(input: &str) -> String {
     classes_with_c.join(", ")
 }
 
+pub fn to_css(input: &str) -> String {
+    let classes = split::split(input, " ");
+    let classes_underscored = classes
+        .iter()
+        .map(|&x| manipulate::replace_all(x, "C.", ""))
+        .map(|x| manipulate::replace_all(&x, "_", "-"))
+        .map(|x| manipulate::replace_all(&x, "__", ":"))
+        .map(|x| manipulate::replace_all(&x, ",", ""))
+        .collect::<Vec<_>>();
+    classes_underscored.join(" ")
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
 
+    // to_typed
     #[test]
     fn test_transform() {
         let input_string = "text-white font-bold py-2";
         let expected_result = "C.text_white, C.font_bold, C.py_2".to_string();
-        assert_eq!(transform(input_string), expected_result);
+        assert_eq!(to_typed(input_string), expected_result);
     }
 
     #[test]
     fn test_transform_double_dash() {
         let input_string = "bg-gray-100 text-white font-bold py-2";
         let expected_result = "C.bg_gray_100, C.text_white, C.font_bold, C.py_2".to_string();
-        assert_eq!(transform(input_string), expected_result);
+        assert_eq!(to_typed(input_string), expected_result);
     }
 
     #[test]
     fn test_transform_one_word() {
         let input_string = "flex";
         let expected_result = "C.flex".to_string();
-        assert_eq!(transform(input_string), expected_result);
+        assert_eq!(to_typed(input_string), expected_result);
     }
 
     #[test]
     fn test_transform_two_word() {
         let input_string = "flex flex-col";
         let expected_result = "C.flex, C.flex_col".to_string();
-        assert_eq!(transform(input_string), expected_result);
+        assert_eq!(to_typed(input_string), expected_result);
     }
 
     #[test]
@@ -51,6 +64,42 @@ mod tests {
         let input_string = "text-white font-bold py-2 hover:bg-blue-light rounded";
         let expected_result =
             "C.text_white, C.font_bold, C.py_2, C.hover__bg_blue_light, C.rounded".to_string();
-        assert_eq!(transform(input_string), expected_result);
+        assert_eq!(to_typed(input_string), expected_result);
+    }
+
+    // to_css
+    #[test]
+    fn test_transform2() {
+        let input_string = "C.text_white, C.font_bold, C.py_2";
+        let expected_result = "text-white font-bold py-2".to_string();
+        assert_eq!(to_css(input_string), expected_result);
+    }
+
+    #[test]
+    fn test_transform2_double_undescore() {
+        let input_string = "C.bg_gray_100, C.text_white, C.font_bold, C.py_2";
+        let expected_result = "bg-gray-100 text-white font-bold py-2".to_string();
+        assert_eq!(to_css(input_string), expected_result);
+    }
+
+    #[test]
+    fn test_transform2_one_word() {
+        let input_string = "C.flex";
+        let expected_result = "flex".to_string();
+        assert_eq!(to_css(input_string), expected_result);
+    }
+
+    #[test]
+    fn test_transform2_two_word() {
+        let input_string = "C.flex, C.flex_col";
+        let expected_result = "flex flex-col".to_string();
+        assert_eq!(to_css(input_string), expected_result);
+    }
+
+    #[test]
+    fn test_transform2_with_double_underscore_one_place() {
+        let input_string = "C.text_white, C.font_bold, C.py_2, C.hover__bg_blue_light, C.rounded";
+        let expected_result = "text-white font-bold py-2 hover:bg-blue-light rounded".to_string();
+        assert_eq!(to_css(input_string), expected_result);
     }
 }

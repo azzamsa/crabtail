@@ -8,11 +8,11 @@ skip_core_tasks = true
 
 [tasks.verify]
 description = "Format, lint with Clippy and run tests"
-dependencies = ["fmt", "clippy", "fmt_prettier"]
+dependencies = ["fmt", "clippy", "test_cargo" ,"fmt_prettier"]
 
 [tasks.verify_only]
 description = "Like `verify`, but fails if the code isn't formatted. Primarily for CI."
-dependencies = ["fmt_check", "clippy", "fmt_prettier_check", "test_h_firefox"]
+dependencies = ["fmt_check", "clippy", "test_cargo", "fmt_prettier_check", "test_h_firefox"]
 
 # ---- BASIC ----
 
@@ -104,3 +104,8 @@ install_crate = { crate_name = "wasm-pack", binary = "wasm-pack", test_arg = "-V
 command = "wasm-pack"
 args = ["test", "--${@}"]
 dependencies = ["prepare"]
+
+[tasks.test_cargo]
+description = "Run tests"
+command = "cargo"
+args = ["test"]
