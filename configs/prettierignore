@@ -1,4 +1,4 @@
 dist/
 target/
-sass/compiled.scss
+**/compiled.scss
 
