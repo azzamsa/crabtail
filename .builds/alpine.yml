@@ -1,0 +1,54 @@
+image: alpine/3.13
+
+sources:
+  - https://git.sr.ht/~azzamsa/crabtail
+
+packages:
+  - nodejs
+  - yarn
+  - rustup
+  - openssl-dev
+
+environment:
+  project: crabtail
+
+secrets:
+  - 1cf349b2-4fe8-4fbe-9640-a9c79b447ee1 # Netlify auth token
+  - 20ebe8c5-7bbd-406e-8027-320d12e841ac # Netlify site id
+
+tasks:
+  - ci: |
+      cd ${project}
+
+      # install rustup
+      rustup-init -y --profile minimal
+      export PATH="$HOME/.cargo/bin:$PATH"
+
+      # install Rust stable
+      rustup install stable --profile minimal
+      cargo install --force cargo-make --version 0.32.14
+
+      # install Rust nightly
+      rustup toolchain install nightly
+      rustup component add rustfmt --toolchain nightly
+
+      # install JS depedencies
+      yarn global add npx
+      export PATH="$HOME/.yarn/bin:$PATH"
+      yarn install
+
+      # test
+      # cd ${project}
+      # makers verify_only
+
+      # build
+      cargo install wasm-bindgen-cli --version 0.2.72
+      makers build
+
+      # deploy
+      set +x
+      NETLIFY_AUTH_TOKEN=$(cat ~/.NETLIFY_AUTH_TOKEN)
+      NETLIFY_SITE_ID=$(cat ~/.NETLIFY_CRABTAIL_ID)
+
+      sudo yarn global add --unsafe-perm=true netlify-cli@3.11.0
+      netlify deploy --site $NETLIFY_CRABTAIL_ID --auth $NETLIFY_AUTH_TOKEN --prod --dir ./dist
