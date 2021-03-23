@@ -1,6 +1,6 @@
 use voca_rs::*;
 
-fn transform(input: &str) -> String {
+pub fn transform(input: &str) -> String {
     let classes = split::split(&input, " ");
     let classes_underscored = classes
         .iter()
@@ -13,12 +13,6 @@ fn transform(input: &str) -> String {
         .collect::<Vec<_>>();
     let result = classes_with_c.join(", ");
     return result;
-}
-
-fn main() {
-    let input_string = "text-white font-bold py-2 hover:bg-blue-light rounded";
-    let result = transform(input_string);
-    println!("result: {:?}", result);
 }
 
 #[cfg(test)]

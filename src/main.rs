@@ -1,4 +1,5 @@
 mod generated;
+mod transform;
 
 use seed::{prelude::*, *};
 
@@ -9,28 +10,47 @@ use crate::generated::css_classes::C;
 // ------ ------
 
 fn init(_: Url, _: &mut impl Orders<Msg>) -> Model {
-    Model::default()
+    Model {
+        css_input: "".to_string(),
+        css_typed: "".to_string(),
+    }
 }
 
 // ------ ------
 //     Model
 // ------ ------
 
-type Model = i32;
+//#[derive(Copy, Clone)]
+struct Model {
+    css_input: String,
+    css_typed: String,
+}
 
 // ------ ------
 //    Update
 // ------ ------
 
-enum Msg {}
+enum Msg {
+    Transform,
+    CSSInputChanged(String),
+}
 
-fn update(_: Msg, _: &mut Model, _: &mut impl Orders<Msg>) {}
+fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
+    let css_input = &mut model.css_input;
+    let css_typed = &mut model.css_typed;
+    match msg {
+        Msg::CSSInputChanged(input) => {
+            *css_input = input;
+        }
+        Msg::Transform => *css_typed = transform::transform(css_input),
+    }
+}
 
 // ------ ------
 //     View
 // ------ ------
 
-fn view(_: &Model) -> impl IntoNodes<Msg> {
+fn view(model: &Model) -> impl IntoNodes<Msg> {
     vec![
         header![
             C![C.max_w_lg, C.mx_auto],
@@ -49,53 +69,37 @@ fn view(_: &Model) -> impl IntoNodes<Msg> {
             ],
             section![p![
                 C![C.text_center, C.text_gray_600, C.pt_0],
-                 "Convert your TailwindCSS 💨 class to typed Rust 🦀",
+                "Convert your TailwindCSS 💨 class to typed Rust 🦀",
             ]],
             section![
                 C![C.flex, C.flex_col, C.mt_10],
                 div![
                     C![C.mb_6, C.pt_3, C.rounded, C.bg_gray_200],
-                    label![
-                        C![
-                            C.block,
-                            C.text_gray_700,
-                            C.text_sm,
-                            C.font_bold,
-                            C.mb_2,
-                            C.ml_3
-                        ],
-                        "CSS"
-                    ],
+                    label![C!["input-label"], "CSS"],
                     input![
                         id!["css"],
                         attrs! {
-                            At::Type => "text"
+                            At::Type => "text",
+                            At::Placeholder => "py-2 text-white hover:bg-blue-light";
+
                         },
                         C!["input"],
+                        input_ev(Ev::Input, Msg::CSSInputChanged),
                     ]
                 ],
                 div![
                     C![C.mb_6, C.pt_3, C.rounded, C.bg_gray_200],
-                    label![
-                        C![
-                            C.block,
-                            C.text_gray_700,
-                            C.text_sm,
-                            C.font_bold,
-                            C.mb_2,
-                            C.ml_3
-                        ],
-                        "Typed"
-                    ],
+                    label![C!["input-label"], "Typed"],
                     input![
                         id!["typed"],
                         attrs! {
                             At::Type => "text"
+                            At::Value => model.css_typed;
                         },
-                        C!["input"]
+                        C!["input"],
                     ]
                 ],
-                button![C!["btn"], "Go 🚀",]
+                button![C!["btn"], ev(Ev::Click, |_| Msg::Transform), "Go 🚀",]
             ],
         ],
     ]
