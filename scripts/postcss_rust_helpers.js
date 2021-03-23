@@ -13,7 +13,8 @@ module.exports = {
    * @returns Set of class names
    */
   getUsedCssClasses: function () {
-    return new Set([...getUsedCssClassesInRust()])
+    return new Set([...getUsedCssClassesInRust(),
+                   ...getUsedCustomCssClassesInRust()])
   },
 }
 
@@ -95,6 +96,32 @@ function getUsedCssClassesInRust() {
   })
   return usedCssClasses
 }
+
+
+/**
+ * Search in Rust files for `C!["input-label"]`.
+ *
+ * @returns usedCssClasses Set of class names
+ */
+function getUsedCustomCssClassesInRust() {
+  const usedCssClasses = new Set()
+  // search in Rust files
+  const files = findFiles.fileSync(/\.rs$/, "./src")
+  files.forEach((filePath) => {
+    const fileContent = fs.readFileSync(filePath, "utf8")
+    // example of a used class in Rust code is `C!["input-label"]`
+    // the unescaped regex `C\!\["[a-zA-Z0-9_-]+"]`
+    const usedCssClassesInFile = fileContent.match(/C\!\["[a-zA-Z0-9_-]+"]/g) || []
+    usedCssClassesInFile
+      // remove prefix `C!["` and `"]` suffix
+      .map((class_) => class_.slice(4,-2))
+      // add class to set
+      .forEach((class_) => usedCssClasses.add(class_))
+  })
+  return usedCssClasses
+}
+
+
 
 /**
  * Transform css class name into indentifier that can be used as Rust struct field name.
