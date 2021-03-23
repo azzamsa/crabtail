@@ -29,10 +29,6 @@ module.exports = ( ctx ) => {
           }
         }
       }),
-      // require("postcss-import")({
-      //   from: "sass/main.scss"
-      // }),
-      
     ]
   };
 };
