@@ -1,7 +1,7 @@
 use voca_rs::*;
 
 pub fn transform(input: &str) -> String {
-    let classes = split::split(&input, " ");
+    let classes = split::split(input, " ");
     let classes_underscored = classes
         .iter()
         .map(|&x| manipulate::replace_all(x, "-", "_"))
@@ -9,10 +9,9 @@ pub fn transform(input: &str) -> String {
         .collect::<Vec<_>>();
     let classes_with_c = classes_underscored
         .iter()
-        .map(|x| manipulate::insert(&x, "C.", 0))
+        .map(|x| manipulate::insert(x, "C.", 0))
         .collect::<Vec<_>>();
-    let result = classes_with_c.join(", ");
-    return result;
+    classes_with_c.join(", ")
 }
 
 #[cfg(test)]

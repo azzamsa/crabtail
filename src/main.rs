@@ -80,7 +80,7 @@ fn view(model: &Model) -> impl IntoNodes<Msg> {
             ],
             section![p![
                 C![C.text_center, C.text_gray_600, C.pt_0],
-                "Convert your TailwindCSS 💨 class to typed Rust 🦀",
+                "Convert your TailwindCSS \u{1f4a8} class to typed Rust \u{1f980}",
             ]],
             section![
                 C![C.flex, C.flex_col, C.mt_10],
@@ -110,7 +110,7 @@ fn view(model: &Model) -> impl IntoNodes<Msg> {
                         C!["input"],
                     ]
                 ],
-                button![C!["btn"], ev(Ev::Click, |_| Msg::Transform), "Go 🚀",]
+                button![C!["btn"], ev(Ev::Click, |_| Msg::Transform), "Go \u{1f680}"]
             ],
         ],
     ]]
