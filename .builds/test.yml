@@ -7,7 +7,8 @@ packages:
   - nodejs
   - yarn
   - rustup
-  - openssl-dev
+  - openssl-dev # cargo-make needs
+  - wget
 
 environment:
   project: crabtail
@@ -17,7 +18,7 @@ secrets:
   - 20ebe8c5-7bbd-406e-8027-320d12e841ac # Netlify site id
 
 tasks:
-  - ci: |
+  - test: |
       cd ${project}
 
       # install rustup
@@ -38,17 +39,5 @@ tasks:
       yarn install
 
       # test
-      # cd ${project}
-      # makers verify_only
+      cargo make verify_only
 
-      # build
-      cargo install wasm-bindgen-cli --version 0.2.72
-      makers build
-
-      # deploy
-      set +x
-      NETLIFY_AUTH_TOKEN=$(cat ~/.NETLIFY_AUTH_TOKEN)
-      NETLIFY_SITE_ID=$(cat ~/.NETLIFY_CRABTAIL_ID)
-
-      sudo yarn global add --unsafe-perm=true netlify-cli@3.11.0
-      netlify deploy --site $NETLIFY_CRABTAIL_ID --auth $NETLIFY_AUTH_TOKEN --prod --dir ./dist
