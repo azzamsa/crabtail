@@ -70,7 +70,7 @@ fn view(model: &Model) -> impl IntoNodes<Msg> {
         main![
             C![
                 C.bg_white,
-                C.max_w_lg,
+                C.max_w_5xl,
                 C.mx_auto,
                 C.p_8,
                 C.md__p_12,
