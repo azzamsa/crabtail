@@ -13,15 +13,15 @@ use crate::generated::css_classes::C;
 
 fn init(_: Url, _: &mut impl Orders<Msg>) -> Model {
     Model {
-        css_input: "".to_string(),
-        css_typed: "".to_string(),
         first_textarea: TextArea {
             label: "CSS".to_string(),
             placeholder: "py-2 text-white hover:bg-yellow-500".to_string(),
+            value: "".to_string(),
         },
         second_textarea: TextArea {
             label: "Typed".to_string(),
             placeholder: "C.py_2, C.text_white, C.hover__bg_yellow_500".to_string(),
+            value: "".to_string(),
         },
         swapped_label: false,
     }
@@ -31,10 +31,7 @@ fn init(_: Url, _: &mut impl Orders<Msg>) -> Model {
 //     Model
 // ------ ------
 
-//#[derive(Copy, Clone)]
 struct Model {
-    css_input: String,
-    css_typed: String,
     first_textarea: TextArea,
     second_textarea: TextArea,
     swapped_label: bool,
@@ -43,6 +40,7 @@ struct Model {
 struct TextArea {
     label: String,
     placeholder: String,
+    value: String,
 }
 
 // ------ ------
@@ -51,47 +49,73 @@ struct TextArea {
 
 enum Msg {
     Transform,
-    CSSInputChanged(String),
+    FirstTextAreaChanged(String),
+    SecondTextAreaChanged(String),
     Swap,
 }
 
 fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
-    let css_input = &mut model.css_input;
-    let css_typed = &mut model.css_typed;
     let swapped_label = &mut model.swapped_label;
     let first_textarea = &mut model.first_textarea;
     let second_textarea = &mut model.second_textarea;
 
     match msg {
-        Msg::CSSInputChanged(input) => {
-            *css_input = input;
+        Msg::FirstTextAreaChanged(class_input) => {
+            *first_textarea = TextArea {
+                label: first_textarea.label.clone(),
+                placeholder: first_textarea.placeholder.clone(),
+                value: class_input.to_string(),
+            };
+        }
+        Msg::SecondTextAreaChanged(class_input) => {
+            *second_textarea = TextArea {
+                label: second_textarea.label.clone(),
+                placeholder: second_textarea.placeholder.clone(),
+                value: class_input.to_string(),
+            };
         }
         Msg::Transform => {
             if *swapped_label {
-                *css_typed = transform::to_css(css_input);
+                *second_textarea = TextArea {
+                    label: second_textarea.label.clone(),
+                    placeholder: second_textarea.placeholder.clone(),
+                    value: transform::to_css(&first_textarea.value),
+                };
             } else {
-                *css_typed = transform::to_typed(css_input);
+                *second_textarea = TextArea {
+                    label: second_textarea.label.clone(),
+                    placeholder: second_textarea.placeholder.clone(),
+                    value: transform::to_typed(&first_textarea.value),
+                };
             }
         }
         Msg::Swap => {
             if *swapped_label {
+                let first_textarea_value_tmp = first_textarea.value.clone();
+                let second_textarea_value_tmp = second_textarea.value.clone();
                 *first_textarea = TextArea {
                     label: "CSS".to_string(),
                     placeholder: "py-2 text-white hover:bg-yellow-500".to_string(),
+                    value: second_textarea_value_tmp,
                 };
                 *second_textarea = TextArea {
                     label: "Typed".to_string(),
                     placeholder: "C.py_2, C.text_white, C.hover__bg_yellow_500".to_string(),
+                    value: first_textarea_value_tmp,
                 };
                 *swapped_label = false;
             } else {
+                let first_textarea_value_tmp = first_textarea.value.clone();
+                let second_textarea_value_tmp = second_textarea.value.clone();
                 *first_textarea = TextArea {
                     label: "Typed".to_string(),
                     placeholder: "C.py_2, C.text_white, C.hover__bg_yellow_500".to_string(),
+                    value: second_textarea_value_tmp,
                 };
                 *second_textarea = TextArea {
                     label: "CSS".to_string(),
                     placeholder: "py-2 text-white hover:bg-yellow-500".to_string(),
+                    value: first_textarea_value_tmp,
                 };
                 *swapped_label = true;
             }
@@ -143,10 +167,10 @@ fn view(model: &Model) -> impl IntoNodes<Msg> {
                         attrs! {
                             At::Type => "text",
                             At::Placeholder => &model.first_textarea.placeholder;
-
+                            At::Value => model.first_textarea.value;
                         },
                         C!["input"],
-                        input_ev(Ev::Input, Msg::CSSInputChanged),
+                        input_ev(Ev::Input, Msg::FirstTextAreaChanged),
                     ]
                 ],
                 div![
@@ -155,11 +179,12 @@ fn view(model: &Model) -> impl IntoNodes<Msg> {
                     textarea![
                         id!["typed"],
                         attrs! {
-                            At::Type => "text"
-                                At::Placeholder => &model.second_textarea.placeholder;
-                            At::Value => model.css_typed;
+                            At::Type => "text";
+                            At::Placeholder => &model.second_textarea.placeholder;
+                            At::Value => model.second_textarea.value;
                         },
                         C!["input"],
+                        input_ev(Ev::Input, Msg::SecondTextAreaChanged),
                     ]
                 ],
                 div![
