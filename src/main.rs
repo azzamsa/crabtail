@@ -53,7 +53,16 @@ fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
 // ------ ------
 
 fn view(model: &Model) -> impl IntoNodes<Msg> {
-    vec![
+    vec![section![
+        C![
+            C.bg_main,
+            C.pt_12,
+            C.md__pt_20,
+            C.pb_6,
+            C.px_2,
+            C.md__px_0,
+            C.min_h_screen
+        ],
         header![
             C![C.max_w_lg, C.mx_auto],
             h1![C![C.font_bold, C.text_white C.text_center], "CrabTail"]
@@ -104,7 +113,7 @@ fn view(model: &Model) -> impl IntoNodes<Msg> {
                 button![C!["btn"], ev(Ev::Click, |_| Msg::Transform), "Go 🚀",]
             ],
         ],
-    ]
+    ]]
 }
 
 // ------ ------
