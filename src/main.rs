@@ -87,7 +87,7 @@ fn view(model: &Model) -> impl IntoNodes<Msg> {
                 div![
                     C![C.mb_6, C.pt_3, C.rounded, C.bg_gray_200],
                     label![C!["input-label"], "CSS"],
-                    input![
+                    textarea![
                         id!["css"],
                         attrs! {
                             At::Type => "text",
@@ -101,7 +101,7 @@ fn view(model: &Model) -> impl IntoNodes<Msg> {
                 div![
                     C![C.mb_6, C.pt_3, C.rounded, C.bg_gray_200],
                     label![C!["input-label"], "Typed"],
-                    input![
+                    textarea![
                         id!["typed"],
                         attrs! {
                             At::Type => "text"
