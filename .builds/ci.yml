@@ -19,9 +19,7 @@ secrets:
   - 9db67c26-4aa9-454f-a2fd-3b126c262096 # Netlify site id
 
 tasks:
-  - test: |
-      cd ${project}
-
+  - setup-rust: |
       # install rustup
       curl https://sh.rustup.rs -sSf | sh -s -- -y
       export PATH="$HOME/.cargo/bin:$PATH"
@@ -42,6 +40,23 @@ tasks:
       rustup toolchain install nightly
       rustup component add rustfmt --toolchain nightly
 
+      # install trunk
+      wget -qO- https://github.com/thedodd/trunk/releases/download/v0.10.0/trunk-x86_64-unknown-linux-gnu.tar.gz | tar -xzf-
+      chmod +x trunk
+      cp trunk ~/.cargo/bin/
+      trunk --version
+
+      # install wasm-bindgen
+      wget -qO- https://github.com/rustwasm/wasm-bindgen/releases/download/0.2.72/wasm-bindgen-0.2.72-x86_64-unknown-linux-musl.tar.gz | tar -xzf-
+      mv wasm-bindgen-0.2.72-x86_64-unknown-linux-musl/ wasm-bindgen
+      chmod +x wasm-bindgen/wasm-bindgen
+      cp wasm-bindgen/* ~/.cargo/bin/
+      wasm-bindgen --version
+
+      # make path persistent
+      echo export PATH="$HOME/.cargo/bin:$PATH" >> ~/.buildenv
+
+  - setup-js: |
       # install JS depedencies
       # locally isnstalled yarn is too old
       wget -q https://github.com/Schniz/fnm/releases/download/v1.23.1/fnm-linux.zip
@@ -58,29 +73,30 @@ tasks:
       npm install -g yarn
       yarn --version
 
-      yarn global add npx prettier
+      yarn global add npx@10.2.2 prettier@2.2.1
       export PATH="$HOME/.yarn/bin:$PATH"
+      npx --version
+      prettier --version
+
+      # make path persistent
+      echo export PATH="$HOME/.yarn/bin:$PATH" >> ~/.buildenv
+      echo eval "$(fnm env)" >> ~/.buildenv
+      echo fnm use v14.15.4 >> ~/.buildenv
+
+  - setup: |
+      cd ${project}
       yarn install
-
-      # install trunk
-      wget -qO- https://github.com/thedodd/trunk/releases/download/v0.10.0/trunk-x86_64-unknown-linux-gnu.tar.gz | tar -xzf-
-      chmod +x trunk
-      cp trunk ~/.cargo/bin/
-      trunk --version
-
-      # test
-      # install wasm bindgen
-      wget -qO- https://github.com/rustwasm/wasm-bindgen/releases/download/0.2.72/wasm-bindgen-0.2.72-x86_64-unknown-linux-musl.tar.gz | tar -xzf-
-      mv wasm-bindgen-0.2.72-x86_64-unknown-linux-musl/ wasm-bindgen
-      chmod +x wasm-bindgen/wasm-bindgen
-      cp wasm-bindgen/wasm-bindgen ~/.cargo/bin/
-      wasm-bindgen --version
 
       rustup target add wasm32-unknown-unknown
       cargo make build_release
+
+  - test: |
+      cd ${project}
       cargo make verify_only
 
-      # deploy
+  - deploy: |
+      cd ${project}
+
       set +x
       NETLIFY_AUTH_TOKEN=$(cat ~/.NETLIFY_AUTH_TOKEN)
       NETLIFY_SITE_ID=$(cat ~/.NETLIFY_CRABTAIL_ID)
