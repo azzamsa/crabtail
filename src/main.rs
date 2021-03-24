@@ -39,35 +39,31 @@ enum TextAreaType {
     Output,
 }
 
+fn generate_textarea(textarea_type: TextAreaType) -> TextArea {
+    if textarea_type == TextAreaType::Input {
+        TextArea {
+            label: Some("CSS".to_string()),
+            placeholder: Some("py-2 text-white hover:bg-yellow-500".to_string()),
+            value: Some("".to_string()),
+        }
+    } else {
+        TextArea {
+            label: Some("Typed".to_string()),
+            placeholder: Some("C.py_2, C.text_white, C.hover__bg_yellow_500".to_string()),
+            value: Some("".to_string()),
+        }
+    }
+}
+
 impl TextArea {
     fn default(textarea_type: TextAreaType) -> TextArea {
-        if textarea_type == TextAreaType::Input {
-            TextArea {
-                label: Some("CSS".to_string()),
-                placeholder: Some("py-2 text-white hover:bg-yellow-500".to_string()),
-                value: Some("".to_string()),
-            }
-        } else {
-            TextArea {
-                label: Some("Typed".to_string()),
-                placeholder: Some("C.py_2, C.text_white, C.hover__bg_yellow_500".to_string()),
-                value: Some("".to_string()),
-            }
-        }
+        generate_textarea(textarea_type)
     }
     fn swapped(textarea_type: TextAreaType) -> TextArea {
         if textarea_type == TextAreaType::Input {
-            TextArea {
-                label: Some("Typed".to_string()),
-                placeholder: Some("C.py_2, C.text_white, C.hover__bg_yellow_500".to_string()),
-                value: Some("".to_string()),
-            }
+            generate_textarea(TextAreaType::Output)
         } else {
-            TextArea {
-                label: Some("CSS".to_string()),
-                placeholder: Some("py-2 text-white hover:bg-yellow-500".to_string()),
-                value: Some("".to_string()),
-            }
+            generate_textarea(TextAreaType::Output)
         }
     }
 }
@@ -89,90 +85,75 @@ fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
 
     match msg {
         Msg::FirstTextAreaChanged(class_input) => {
-            if *is_swapped {
-                *textarea_input = TextArea {
-                    value: Some(class_input),
-                    ..TextArea::swapped(TextAreaType::Input)
-                };
+            let default = if *is_swapped {
+                TextArea::swapped(TextAreaType::Input)
             } else {
-                *textarea_input = TextArea {
-                    value: Some(class_input),
-                    ..TextArea::default(TextAreaType::Input)
-                };
-            }
+                TextArea::default(TextAreaType::Input)
+            };
+            *textarea_input = TextArea {
+                value: Some(class_input),
+                ..default
+            };
         }
         Msg::SecondTextAreaChanged(class_input) => {
-            if *is_swapped {
-                *textarea_output = TextArea {
-                    value: Some(class_input),
-                    ..TextArea::swapped(TextAreaType::Output)
-                };
+            let default = if *is_swapped {
+                TextArea::swapped(TextAreaType::Output)
             } else {
-                *textarea_output = TextArea {
-                    value: Some(class_input),
-                    ..TextArea::default(TextAreaType::Output)
-                };
+                TextArea::default(TextAreaType::Output)
+            };
+            *textarea_output = TextArea {
+                value: Some(class_input),
+                ..default
             }
         }
         Msg::Swap => {
-            if *is_swapped {
-                let textarea_input_value_tmp = textarea_input.value.clone();
-                let textarea_output_value_tmp = textarea_output.value.clone();
+            let textarea_input_value_tmp = textarea_input.value.clone();
+            let textarea_output_value_tmp = textarea_output.value.clone();
 
-                *textarea_input = TextArea {
-                    value: Some(textarea_output_value_tmp.unwrap_or("".to_string())),
-                    ..TextArea::default(TextAreaType::Input)
-                };
-                *textarea_output = TextArea {
-                    value: Some(textarea_input_value_tmp.unwrap_or("".to_string())),
-                    ..TextArea::default(TextAreaType::Output)
-                };
+            let (default_input, default_output) = if *is_swapped {
+                // default_input -> input
+                // default_output -> output
                 *is_swapped = false;
+                (
+                    TextArea::default(TextAreaType::Input),
+                    TextArea::default(TextAreaType::Output),
+                )
             } else {
                 // if not swapped yet
-                let textarea_input_value_tmp = textarea_input.value.clone();
-                let textarea_output_value_tmp = textarea_output.value.clone();
-
-                *textarea_input = TextArea {
-                    value: Some(textarea_output_value_tmp.unwrap_or("".to_string())),
-                    ..TextArea::default(TextAreaType::Output)
-                };
-                *textarea_output = TextArea {
-                    value: Some(textarea_input_value_tmp.unwrap_or("".to_string())),
-                    ..TextArea::default(TextAreaType::Input)
-                };
+                // default_input -> output
+                // default_output -> input
                 *is_swapped = true;
-            }
+                (
+                    TextArea::default(TextAreaType::Output),
+                    TextArea::default(TextAreaType::Input),
+                )
+            };
+            *textarea_input = TextArea {
+                value: Some(textarea_output_value_tmp.unwrap_or("".to_string())),
+                ..default_input
+            };
+            *textarea_output = TextArea {
+                value: Some(textarea_input_value_tmp.unwrap_or("".to_string())),
+                ..default_output
+            };
         }
         Msg::Transform => {
-            if *is_swapped {
-                *textarea_output = TextArea {
-                    value: Some(transform::to_css(
-                        &textarea_input.value.clone().unwrap_or("".to_string()),
-                    )),
-                    label: Some(textarea_output.label.clone().unwrap_or("".to_string())),
-                    placeholder: Some(
-                        textarea_output
-                            .placeholder
-                            .clone()
-                            .unwrap_or("".to_string()),
-                    ),
-                };
+            let value = if *is_swapped {
+                transform::to_css(&textarea_input.value.clone().unwrap_or("".to_string()))
             } else {
                 // if not swapped yet
-                *textarea_output = TextArea {
-                    value: Some(transform::to_typed(
-                        &textarea_input.value.clone().unwrap_or("".to_string()),
-                    )),
-                    label: Some(textarea_output.label.clone().unwrap_or("".to_string())),
-                    placeholder: Some(
-                        textarea_output
-                            .placeholder
-                            .clone()
-                            .unwrap_or("".to_string()),
-                    ),
-                };
-            }
+                transform::to_typed(&textarea_input.value.clone().unwrap_or("".to_string()))
+            };
+            *textarea_output = TextArea {
+                value: Some(value),
+                label: Some(textarea_output.label.clone().unwrap_or("".to_string())),
+                placeholder: Some(
+                    textarea_output
+                        .placeholder
+                        .clone()
+                        .unwrap_or("".to_string()),
+                ),
+            };
         }
     }
 }
