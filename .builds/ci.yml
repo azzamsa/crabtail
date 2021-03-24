@@ -95,6 +95,7 @@ tasks:
       cargo make verify_only
 
   - deploy: |
+      git branch --contains | grep master || echo "Build stopped. Not on master branch"
       cd ${project}
 
       set +x
