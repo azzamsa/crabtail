@@ -1,4 +1,4 @@
-use voca_rs::*;
+use voca_rs::{manipulate, split};
 
 pub fn to_typed(input: &str) -> String {
     let classes = split::split(input, " ");

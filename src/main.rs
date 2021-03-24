@@ -1,7 +1,7 @@
 mod generated;
 mod transform;
 
-use seed::{prelude::*, *};
+use seed::{attrs, button, div, h1, header, id, label, main, p, prelude::*, section, textarea, C};
 
 use crate::generated::css_classes::C;
 
@@ -62,14 +62,14 @@ fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
             *first_textarea = TextArea {
                 label: first_textarea.label.clone(),
                 placeholder: first_textarea.placeholder.clone(),
-                value: class_input.to_string(),
+                value: class_input,
             };
         }
         Msg::SecondTextAreaChanged(class_input) => {
             *second_textarea = TextArea {
                 label: second_textarea.label.clone(),
                 placeholder: second_textarea.placeholder.clone(),
-                value: class_input.to_string(),
+                value: class_input,
             };
         }
         Msg::Transform => {
