@@ -18,7 +18,7 @@ pub fn to_css(input: &str) -> String {
     let classes = split::split(input, ",");
     let classes_underscored = classes
         .iter()
-        .map(|x| manipulate::replace_all(&x, "__", ":"))
+        .map(|x| manipulate::replace_all(x, "__", ":"))
         .map(|x| manipulate::replace_all(&x, "_", "-"))
         .map(|x| manipulate::replace_all(&x, "C.", ""))
         .collect::<Vec<_>>();
