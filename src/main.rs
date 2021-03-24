@@ -11,8 +11,8 @@ use crate::generated::css_classes::C;
 
 fn init(_: Url, _: &mut impl Orders<Msg>) -> Model {
     Model {
-        textarea_input: TextArea::default(TextAreaType::Input),
-        textarea_output: TextArea::default(TextAreaType::Output),
+        textarea_input: TextArea::default(TextAreaType::CSS),
+        textarea_output: TextArea::default(TextAreaType::Typed),
         is_swapped: false,
     }
 }
@@ -35,12 +35,12 @@ struct TextArea {
 
 #[derive(PartialEq)]
 enum TextAreaType {
-    Input,
-    Output,
+    CSS,
+    Typed,
 }
 
 fn generate_textarea(textarea_type: TextAreaType) -> TextArea {
-    if textarea_type == TextAreaType::Input {
+    if textarea_type == TextAreaType::CSS {
         TextArea {
             label: Some("CSS".to_string()),
             placeholder: Some("py-2 text-white hover:bg-yellow-500".to_string()),
@@ -60,10 +60,10 @@ impl TextArea {
         generate_textarea(textarea_type)
     }
     fn swapped(textarea_type: TextAreaType) -> TextArea {
-        if textarea_type == TextAreaType::Input {
-            generate_textarea(TextAreaType::Output)
+        if textarea_type == TextAreaType::CSS {
+            generate_textarea(TextAreaType::Typed)
         } else {
-            generate_textarea(TextAreaType::Output)
+            generate_textarea(TextAreaType::Typed)
         }
     }
 }
@@ -86,9 +86,9 @@ fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
     match msg {
         Msg::FirstTextAreaChanged(class_input) => {
             let default = if *is_swapped {
-                TextArea::swapped(TextAreaType::Input)
+                TextArea::swapped(TextAreaType::CSS)
             } else {
-                TextArea::default(TextAreaType::Input)
+                TextArea::default(TextAreaType::CSS)
             };
             *textarea_input = TextArea {
                 value: Some(class_input),
@@ -97,9 +97,9 @@ fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
         }
         Msg::SecondTextAreaChanged(class_input) => {
             let default = if *is_swapped {
-                TextArea::swapped(TextAreaType::Output)
+                TextArea::swapped(TextAreaType::Typed)
             } else {
-                TextArea::default(TextAreaType::Output)
+                TextArea::default(TextAreaType::Typed)
             };
             *textarea_output = TextArea {
                 value: Some(class_input),
@@ -111,21 +111,20 @@ fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
             let textarea_output_value_tmp = textarea_output.value.clone();
 
             let (default_input, default_output) = if *is_swapped {
-                // default_input -> input
-                // default_output -> output
+                // keep the default
                 *is_swapped = false;
                 (
-                    TextArea::default(TextAreaType::Input),
-                    TextArea::default(TextAreaType::Output),
+                    TextArea::default(TextAreaType::CSS),
+                    TextArea::default(TextAreaType::Typed),
                 )
             } else {
                 // if not swapped yet
-                // default_input -> output
-                // default_output -> input
+                // default_input (CSS) -> Typed
+                // default_output (Typed) -> CSS
                 *is_swapped = true;
                 (
-                    TextArea::default(TextAreaType::Output),
-                    TextArea::default(TextAreaType::Input),
+                    TextArea::default(TextAreaType::Typed),
+                    TextArea::default(TextAreaType::CSS),
                 )
             };
             *textarea_input = TextArea {
