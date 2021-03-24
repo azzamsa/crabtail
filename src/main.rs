@@ -120,17 +120,11 @@ fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
                 let textarea_output_value_tmp = textarea_output.value.clone();
 
                 *textarea_input = TextArea {
-                    value: Some(match textarea_output_value_tmp {
-                        Some(value) => value,
-                        _ => "".to_string(),
-                    }),
+                    value: Some(textarea_output_value_tmp.unwrap_or("".to_string())),
                     ..TextArea::default(TextAreaType::Input)
                 };
                 *textarea_output = TextArea {
-                    value: Some(match textarea_input_value_tmp {
-                        Some(value) => value,
-                        _ => "".to_string(),
-                    }),
+                    value: Some(textarea_input_value_tmp.unwrap_or("".to_string())),
                     ..TextArea::default(TextAreaType::Output)
                 };
                 *is_swapped = false;
@@ -140,17 +134,11 @@ fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
                 let textarea_output_value_tmp = textarea_output.value.clone();
 
                 *textarea_input = TextArea {
-                    value: Some(match textarea_output_value_tmp {
-                        Some(value) => value,
-                        _ => "".to_string(),
-                    }),
+                    value: Some(textarea_output_value_tmp.unwrap_or("".to_string())),
                     ..TextArea::default(TextAreaType::Output)
                 };
                 *textarea_output = TextArea {
-                    value: Some(match textarea_input_value_tmp {
-                        Some(value) => value,
-                        _ => "".to_string(),
-                    }),
+                    value: Some(textarea_input_value_tmp.unwrap_or("".to_string())),
                     ..TextArea::default(TextAreaType::Input)
                 };
                 *is_swapped = true;
@@ -159,34 +147,30 @@ fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
         Msg::Transform => {
             if *is_swapped {
                 *textarea_output = TextArea {
-                    value: Some(match &textarea_input.value {
-                        Some(value) => transform::to_css(value),
-                        _ => "".to_string(),
-                    }),
-                    label: Some(match &textarea_output.label {
-                        Some(label) => label.to_string(),
-                        _ => "".to_string(),
-                    }),
-                    placeholder: Some(match &textarea_output.placeholder {
-                        Some(placeholder) => placeholder.to_string(),
-                        _ => "".to_string(),
-                    }),
+                    value: Some(transform::to_css(
+                        &textarea_input.value.clone().unwrap_or("".to_string()),
+                    )),
+                    label: Some(textarea_output.label.clone().unwrap_or("".to_string())),
+                    placeholder: Some(
+                        textarea_output
+                            .placeholder
+                            .clone()
+                            .unwrap_or("".to_string()),
+                    ),
                 };
             } else {
                 // if not swapped yet
                 *textarea_output = TextArea {
-                    value: Some(match &textarea_input.value {
-                        Some(value) => transform::to_typed(value),
-                        _ => "".to_string(),
-                    }),
-                    label: Some(match &textarea_output.label {
-                        Some(label) => label.to_string(),
-                        _ => "".to_string(),
-                    }),
-                    placeholder: Some(match &textarea_output.placeholder {
-                        Some(placeholder) => placeholder.to_string(),
-                        _ => "".to_string(),
-                    }),
+                    value: Some(transform::to_typed(
+                        &textarea_input.value.clone().unwrap_or("".to_string()),
+                    )),
+                    label: Some(textarea_output.label.clone().unwrap_or("".to_string())),
+                    placeholder: Some(
+                        textarea_output
+                            .placeholder
+                            .clone()
+                            .unwrap_or("".to_string()),
+                    ),
                 };
             }
         }
@@ -233,31 +217,14 @@ fn view(model: &Model) -> impl IntoNodes<Msg> {
                     C![C.mb_6, C.pt_3, C.rounded, C.bg_gray_200],
                     label![
                         C!["input-label"],
-                        match &model.textarea_input.label {
-                            Some(label) => {
-                                label
-                            }
-                            _ => "",
-                        }
+                        &model.textarea_input.label.as_deref().unwrap_or("")
                     ],
                     textarea![
                         id!["css"],
                         attrs! {
                             At::Type => "text",
-                            At::Placeholder => match &model.textarea_input.placeholder {
-                                Some(placeholder) => {
-                                    placeholder
-                                }
-                                _ => ""
-                            }
-
-                            At::Value => match &model.textarea_input.value
-                                {
-                                Some(value) => {
-                                    value.to_string()
-                                }
-                                _ => "".to_string()
-                            };
+                            At::Placeholder => &model.textarea_input.placeholder.as_deref().unwrap_or("");
+                            At::Value => &model.textarea_input.value.as_deref().unwrap_or("")
                         },
                         C!["input"],
                         input_ev(Ev::Input, Msg::FirstTextAreaChanged),
@@ -270,19 +237,8 @@ fn view(model: &Model) -> impl IntoNodes<Msg> {
                         id!["typed"],
                         attrs! {
                             At::Type => "text";
-                            At::Placeholder => match &model.textarea_output.placeholder
-                                {
-                                Some(placeholder) => {
-                                    placeholder
-                                }
-                                _ => ""
-                            };
-                            At::Value => match &model.textarea_output.value {
-                                Some(placeholder) => {
-                                    placeholder
-                                }
-                                _ => ""
-                            };
+                            At::Placeholder => &model.textarea_output.placeholder.as_deref().unwrap_or("");
+                            At::Value => &model.textarea_output.value.as_deref().unwrap_or("");
                         },
                         C!["input"],
                         input_ev(Ev::Input, Msg::SecondTextAreaChanged),
