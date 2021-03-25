@@ -2,11 +2,11 @@
 
 [tasks.verify_crate]
 description = "Format, lint with Clippy and run tests"
-dependencies = ["fmt", "clippy", "test_cargo"]
+dependencies = ["fmt", "test_cargo", "clippy"]
 
-[tasks.verify_only_crate]
+[tasks.is_verified_crate]
 description = "Like `verify`, but fails if the code isn't formatted. Primarily for CI."
-dependencies = ["fmt_check", "clippy", "test_cargo", "test_h_firefox"]
+dependencies = ["fmt_check", "test_cargo", "clippy"]
 
 
 # ---- LINT ----
