@@ -13,7 +13,7 @@ script = [
     "echo 'Ready to deploy 🚀'"
 ]
 
-[tasks.verify_only]
+[tasks.is_verified]
 description = "Like `verify`, but fails if the code isn't formatted. Primarily for CI."
 dependencies = ["fmt_check", "clippy", "test_cargo", "fmt_prettier_check", "test_h_firefox"]
 
