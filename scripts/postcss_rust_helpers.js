@@ -5,13 +5,15 @@ const fs = require("fs")
 // Helpers are used by `configs/postcss.config.js`.
 
 module.exports = {
+  transformToTypedClass: transformToTypedClass,
+  getUsedCustomCssClasses: getUsedCustomCssClasses,
   /**
    * Search in Rust and Handlebars files for CSS classes.
    *
    * @returns Set of class names
    */
   getUsedCssClasses: function () {
-    return new Set([...getUsedCssClassesInRust(), ...getUsedCustomCssClassesInRust()])
+    return new Set([...getUsedCssClassesInRust()])
   },
 }
 
@@ -88,7 +90,6 @@ function getUsedCssClassesInRust() {
     usedCssClassesInFile
       // remove prefix `C.`
       .map((class_) => class_.substring(2))
-      // add class to set
       .forEach((class_) => usedCssClasses.add(class_))
   })
   return usedCssClasses
@@ -99,7 +100,7 @@ function getUsedCssClassesInRust() {
  *
  * @returns usedCssClasses Set of class names
  */
-function getUsedCustomCssClassesInRust() {
+function getUsedCustomCssClasses() {
   const usedCssClasses = new Set()
   // search in Rust files
   const files = findFiles.fileSync(/\.rs$/, "./src")
@@ -115,4 +116,21 @@ function getUsedCustomCssClassesInRust() {
       .forEach((class_) => usedCssClasses.add(class_))
   })
   return usedCssClasses
+}
+
+/**
+ * Transform css class name into indentifier that can be used as Rust struct field name.
+ * (see https://github.com/MartinKavik/postcss-typed-css-classes/blob/master/generators/rust_generator.js)
+ *
+ * @param {string} name
+ * @returns string Escaped class name
+ */
+function transformToTypedClass(name) {
+  name = name.replace(/-/g, "_")
+  name = name.replace(/:/g, "__")
+  name = name.replace(/\//g, "of")
+  if (getKeywords().indexOf(name) > -1) {
+    name += "_"
+  }
+  return name
 }

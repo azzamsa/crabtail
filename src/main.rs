@@ -197,7 +197,7 @@ fn view(model: &Model) -> impl IntoNodes<Msg> {
                 div![
                     C![C.mb_6, C.pt_3, C.rounded, C.bg_gray_200],
                     label![
-                        C!["input-label"],
+                        C![C.input_label],
                         &model.textarea_input.label.as_deref().unwrap_or("")
                     ],
                     textarea![
@@ -207,13 +207,13 @@ fn view(model: &Model) -> impl IntoNodes<Msg> {
                             At::Placeholder => &model.textarea_input.placeholder.as_deref().unwrap_or("");
                             At::Value => &model.textarea_input.value.as_deref().unwrap_or("")
                         },
-                        C!["input"],
+                        C![C.input],
                         input_ev(Ev::Input, Msg::FirstTextAreaChanged),
                     ]
                 ],
                 div![
                     C![C.mb_6, C.pt_3, C.rounded, C.bg_gray_200],
-                    label![C!["input-label"], &model.textarea_output.label],
+                    label![C![C.input_label], &model.textarea_output.label],
                     textarea![
                         id!["typed"],
                         attrs! {
@@ -221,20 +221,20 @@ fn view(model: &Model) -> impl IntoNodes<Msg> {
                             At::Placeholder => &model.textarea_output.placeholder.as_deref().unwrap_or("");
                             At::Value => &model.textarea_output.value.as_deref().unwrap_or("");
                         },
-                        C!["input"],
+                        C![C.input],
                         input_ev(Ev::Input, Msg::SecondTextAreaChanged),
                     ]
                 ],
                 div![
                     C![C.flex, C.justify_end],
                     button![
-                        C!["btn", C.mb_6, C.px_3, C.py_1, C.stroke_2],
+                        C![C.btn, C.mb_6, C.px_3, C.py_1, C.stroke_2],
                         raw_svg!(icon::get(icon::IconName::SwitchVertical)),
                         ev(Ev::Click, |_| Msg::Swap),
                     ]
                 ],
                 button![
-                    C!["btn", C.inline_flex, C.justify_center, C.stroke_2],
+                    C![C.btn, C.inline_flex, C.justify_center, C.stroke_2],
                     raw_svg!(icon::get(icon::IconName::Rocket)),
                     span!["Go"],
                     ev(Ev::Click, |_| Msg::Transform),
