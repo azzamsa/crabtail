@@ -1,7 +1,9 @@
 mod generated;
 mod transform;
 
-use seed::{attrs, button, div, h1, header, id, label, main, p, prelude::*, section, textarea, C};
+use seed::{
+    attrs, button, div, h1, header, id, label, main, p, prelude::*, section, span, textarea, C,
+};
 
 use crate::generated::css_classes::C;
 
@@ -239,7 +241,19 @@ fn view(model: &Model) -> impl IntoNodes<Msg> {
                         "\u{1f500}"
                     ]
                 ],
-                button![C!["btn"], ev(Ev::Click, |_| Msg::Transform), "Go \u{1f680}"]
+                button![
+                    C!["btn"],
+                    ev(Ev::Click, |_| Msg::Transform),
+                    "Go",
+                    span![C![
+                        "tabler tabler-rocket1",
+                        C.text_xl,
+                        C.fill_current,
+                        C.stroke_current,
+                        C.text_white,
+                        C.stroke_2
+                    ]],
+                ]
             ],
         ],
     ]]
