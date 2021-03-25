@@ -94,8 +94,12 @@ tasks:
       cd ${project}
       cargo make is_verified
 
-  - deploy: |
+  - check_rules: |
       git branch --contains | grep master || echo "Build stopped. Not on master branch"
+      # complete-build is sr.ht bash function
+      git branch --contains | grep master || complete-build
+
+  - deploy: |
       cd ${project}
 
       set +x
