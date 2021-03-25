@@ -1,11 +1,14 @@
 //==========  Import all component partials ==========/
 // postcss-import need the exact path and filename
+//@import '../../node_modules/@tabler/icons/iconfont/tabler-icons.scss';
+
 @import "base/all.scss";
 @import "components/all.scss";
 
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
+
 
 @layer base {
   h1 {

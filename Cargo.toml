@@ -13,7 +13,8 @@ edition = "2018"
 
 [dependencies]
 voca_rs = "1.13.0"
-seed = "0.8.0"
+#seed = "0.8.0"
+seed = { git = "https://github.com/seed-rs/seed" }
 
 [dev-dependencies]
 wasm-bindgen-test = "0.3.18"

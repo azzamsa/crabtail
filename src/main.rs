@@ -1,9 +1,8 @@
 mod generated;
+mod icon;
 mod transform;
 
-use seed::{
-    attrs, button, div, h1, header, id, label, main, p, prelude::*, section, span, textarea, C,
-};
+use seed::{prelude::*, *};
 
 use crate::generated::css_classes::C;
 
@@ -191,7 +190,7 @@ fn view(model: &Model) -> impl IntoNodes<Msg> {
             ],
             section![p![
                 C![C.text_center, C.text_gray_600, C.pt_0],
-                "Convert your TailwindCSS \u{1f4a8} class to typed Rust \u{1f980}",
+                "Convert your TailwindCSS class to typed Rust",
             ]],
             section![
                 C![C.flex, C.flex_col, C.mt_10],
@@ -229,31 +228,17 @@ fn view(model: &Model) -> impl IntoNodes<Msg> {
                 div![
                     C![C.flex, C.justify_end],
                     button![
-                        C![
-                            "btn",
-                            C.mb_6,
-                            C.px_3,
-                            C.py_1,
-                            C.hover__text_yellow_700,
-                            C.hover__underline
-                        ],
+                        C!["btn", C.mb_6, C.px_3, C.py_1, C.stroke_2],
+                        raw_svg!(icon::get(icon::IconName::SwitchVertical)),
                         ev(Ev::Click, |_| Msg::Swap),
-                        "\u{1f500}"
                     ]
                 ],
                 button![
-                    C!["btn"],
+                    C!["btn", C.inline_flex, C.justify_center, C.stroke_2],
+                    raw_svg!(icon::get(icon::IconName::Rocket)),
+                    span!["Go"],
                     ev(Ev::Click, |_| Msg::Transform),
-                    "Go",
-                    span![C![
-                        "tabler tabler-rocket1",
-                        C.text_xl,
-                        C.fill_current,
-                        C.stroke_current,
-                        C.text_white,
-                        C.stroke_2
-                    ]],
-                ]
+                ],
             ],
         ],
     ]]
