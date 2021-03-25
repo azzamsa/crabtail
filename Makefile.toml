@@ -18,11 +18,11 @@ workspace = false
 dependencies = ["fmt_prettier" ]
 run_task = { name = "verify_crate", fork = true }
 
-[tasks.verify_only]
+[tasks.is_verified]
 description = "Like `verify`, but fails if the code isn't formatted. Primarily for CI."
 workspace = false
-dependencies = ["fmt_prettier_check", "prepare" ]
-run_task = { name = "verify_only_crate", fork = true }
+dependencies = ["fmt_prettier_check" ]
+run_task = { name = "is_verified_crate", fork = true }
 
 # ---- BASIC ----
 

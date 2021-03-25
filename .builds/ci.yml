@@ -92,7 +92,7 @@ tasks:
 
   - test: |
       cd ${project}
-      cargo make verify_only
+      cargo make is_verified
 
   - deploy: |
       git branch --contains | grep master || echo "Build stopped. Not on master branch"
