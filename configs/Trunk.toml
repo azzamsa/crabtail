@@ -1,0 +1,3 @@
+[build]
+target = "../entries/index.html"
+dist = "../dist"

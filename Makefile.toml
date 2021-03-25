@@ -1,27 +1,34 @@
 [env]
+# enable working with fake workspace
+CARGO_MAKE_EXTEND_WORKSPACE_MAKEFILE = true
+CARGO_MAKE_WORKSPACE_EMULATION = true
+CARGO_MAKE_CRATE_WORKSPACE_MEMBERS = ["crate"]
+
 PORT = "8080"
 
 [config]
-skip_core_tasks = true
+# ability to use cargo command name (e.g build, clean)
+skip_core_tasks = true 
 
 # ---- GENERAL ----
 
 [tasks.verify]
 description = "Format, lint with Clippy and run tests"
-dependencies = ["fmt", "clippy", "test_cargo" ,"fmt_prettier"]
-script = [
-    "echo 'Ready to deploy 🚀'"
-]
-
+workspace = false
+dependencies = ["fmt_prettier" ]
+run_task = { name = "verify_crate", fork = true }
 
 [tasks.verify_only]
 description = "Like `verify`, but fails if the code isn't formatted. Primarily for CI."
-dependencies = ["fmt_check", "clippy", "test_cargo", "fmt_prettier_check", "test_h_firefox"]
+workspace = false
+dependencies = ["fmt_prettier_check", "prepare" ]
+run_task = { name = "verify_only_crate", fork = true }
 
 # ---- BASIC ----
 
 [tasks.clean]
 description = "Remove build output"
+workspace = false
 script = [
     "rm -rf dist",
     "rm -f src/generated/css_classes.rs"
@@ -29,13 +36,15 @@ script = [
 
 [tasks.serve]
 description = "Start server"
-install_crate = { crate_name = "trunk", binary = "trunk", test_arg = "-V" }
+workspace = false
+install_crate = { crate_name = "trunk", binary = "trunk", test_arg = "-h" }
 command = "trunk"
-args = ["serve"]
+args = ["--config", "configs/Trunk.toml", "serve"]
 dependencies = ["prepare"]
 
 [tasks.serve_release]
 description = "Start real web server"
+workspace = false
 install_crate = { crate_name = "microserver", binary = "microserver", test_arg = "-h" }
 command = "microserver"
 args = ["dist/", "--port", "${PORT}"]
@@ -45,14 +54,14 @@ dependencies = ["build_release"]
 
 [tasks.build_release]
 description = "Build with trunk"
-install_crate = { crate_name = "trunk", binary = "trunk", test_arg = "-V" }
+install_crate = { crate_name = "trunk", binary = "trunk", test_arg = "-h" }
+workspace = false
 command = "trunk"
-args = ["build", "--release"]
+args = ["--config", "configs/Trunk.toml", "build", "--release"]
 dependencies = ["prepare_release"]
 
 [tasks.prepare]
 description = "Prepare asset"
-install_crate = { crate_name = "trunk", binary = "trunk", test_arg = "-V" }
 command = "npx"
 args = ["postcss", "--config", "configs/postcss.config.js", "sass/main.scss", "--output", "sass/compiled.scss"]
 
@@ -63,23 +72,6 @@ args = ["postcss", "--config", "configs/postcss.config.js", "sass/main.scss", "-
 
 # ---- LINT ----
 
-[tasks.clippy]
-description = "Lint with Clippy"
-install_crate = { rustup_component_name = "clippy", binary = "cargo-clippy", test_arg = "--help" }
-command = "cargo"
-args = ["clippy", "--all-features", "--", "--deny", "warnings", "--deny", "clippy::pedantic", "--deny", "clippy::nursery"]
-
-[tasks.fmt]
-description = "Format with nightly rustfmt"
-toolchain = "nightly"
-command = "cargo"
-args = ["fmt", "--all"]
-
-[tasks.fmt_check]
-extend = "fmt"
-description = "Check format with nightly rustfmt"
-args = ["fmt", "--all", "--", "--check"]
-
 [tasks.fmt_prettier]
 description = "Format with prettier"
 command = "prettier"
@@ -89,27 +81,3 @@ args = ["--config", "configs/prettier.config.js", "--ignore-path", "configs/pret
 description = "Check format with prettier"
 command = "prettier"
 args = ["--config", "configs/prettier.config.js", "--ignore-path", "configs/prettierignore", "--check", "."]
-
-# ---- TEST ----
-
-[tasks.test_h_firefox]
-description = "Run headless tests with Firefox."
-extend = "test"
-args = ["test", "--headless", "--firefox"]
-
-[tasks.test_h]
-description = "Run headless tests. Ex: 'cargo make test_h firefox'. Test envs: [chrome, firefox, safari]"
-extend = "test"
-args = ["test", "--headless", "--${@}"]
-
-[tasks.test]
-description = "Run tests. Ex: 'cargo make test firefox'. Test envs: [chrome, firefox, safari]"
-install_crate = { crate_name = "wasm-pack", binary = "wasm-pack", test_arg = "-V" }
-command = "wasm-pack"
-args = ["test", "--${@}"]
-dependencies = ["prepare"]
-
-[tasks.test_cargo]
-description = "Run tests"
-command = "cargo"
-args = ["test"]

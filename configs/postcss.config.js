@@ -15,7 +15,7 @@ module.exports = (ctx) => {
       require("tailwindcss")("configs/tailwind.config.js"),
       require("autoprefixer"),
       require("postcss-typed-css-classes")({
-        output_filepath: "src/generated/css_classes.rs",
+        output_filepath: "crate/src/generated/css_classes.rs",
         generator: "rust",
         filter: (class_) => {
           if (ctx.env === "production") {
