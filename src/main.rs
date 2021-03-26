@@ -88,7 +88,7 @@ fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
                 value: Some(class_input),
                 ..default
             };
-        }
+        },
         Msg::SecondTextAreaChanged(class_input) => {
             let default = if *is_swapped {
                 TextArea::generate(&TextAreaType::Css)
@@ -99,7 +99,7 @@ fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
                 value: Some(class_input),
                 ..default
             }
-        }
+        },
         Msg::Swap => {
             let textarea_input_value_tmp = textarea_input.value.clone();
             let textarea_output_value_tmp = textarea_output.value.clone();
@@ -129,7 +129,7 @@ fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
                 value: Some(textarea_input_value_tmp.unwrap_or_else(|| "".to_string())),
                 ..default_output
             };
-        }
+        },
         Msg::Transform => {
             let value = if *is_swapped {
                 transform::to_css(
@@ -150,7 +150,7 @@ fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
                     textarea_output.placeholder.clone().unwrap_or_else(|| "".to_string()),
                 ),
             };
-        }
+        },
     }
 }
 
@@ -177,8 +177,17 @@ fn view(model: &Model) -> impl IntoNodes<Msg> {
                 C.shadow_2xl
             ],
             section![p![
-                C![C.text_center, C.text_gray_600, C.pt_0],
-                "Convert your TailwindCSS class to typed Rust",
+                C![C.text_lg, C.text_center, C.text_gray_600, C.pt_0],
+                "Convert your TailwindCSS",
+                i![
+                    C![C.inline_block, C.mx_1, C.align_middle C.w_4, C.h_4],
+                    raw_svg!(icon::get(&icon::Name::Wind))
+                ],
+                "to typed Rust",
+                i![
+                    C![C.inline_block, C.mx_1, C.align_middle C.w_4, C.h_4],
+                    raw_svg!(icon::get(&icon::Name::Crab))
+                ],
             ]],
             section![
                 C![C.flex, C.flex_col, C.mt_10],
