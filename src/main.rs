@@ -44,31 +44,30 @@ enum TextAreaType {
     Typed,
 }
 
-fn generate_textarea(textarea_type: TextAreaType) -> TextArea {
-    if textarea_type == TextAreaType::CSS {
-        TextArea {
-            label: Some("CSS".to_string()),
-            placeholder: Some("py-2 text-white hover:bg-yellow-500".to_string()),
-            value: Some("".to_string()),
-        }
-    } else {
-        TextArea {
-            label: Some("Typed".to_string()),
-            placeholder: Some("C.py_2, C.text_white, C.hover__bg_yellow_500".to_string()),
-            value: Some("".to_string()),
-        }
-    }
-}
-
 impl TextArea {
     fn default(textarea_type: TextAreaType) -> TextArea {
-        generate_textarea(textarea_type)
+        Self::generate(textarea_type)
     }
     fn swapped(textarea_type: TextAreaType) -> TextArea {
         if textarea_type == TextAreaType::CSS {
-            generate_textarea(TextAreaType::Typed)
+            Self::generate(TextAreaType::Typed)
         } else {
-            generate_textarea(TextAreaType::Typed)
+            Self::generate(TextAreaType::Typed)
+        }
+    }
+    fn generate(textarea_type: TextAreaType) -> TextArea {
+        if textarea_type == TextAreaType::CSS {
+            TextArea {
+                label: Some("CSS".to_string()),
+                placeholder: Some("py-2 text-white hover:bg-yellow-500".to_string()),
+                value: Some("".to_string()),
+            }
+        } else {
+            TextArea {
+                label: Some("Typed".to_string()),
+                placeholder: Some("C.py_2, C.text_white, C.hover__bg_yellow_500".to_string()),
+                value: Some("".to_string()),
+            }
         }
     }
 }
