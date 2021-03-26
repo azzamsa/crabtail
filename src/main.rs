@@ -16,8 +16,8 @@ use crate::generated::css_classes::C;
 
 fn init(_: Url, _: &mut impl Orders<Msg>) -> Model {
     Model {
-        textarea_input: TextArea::default(TextAreaType::CSS),
-        textarea_output: TextArea::default(TextAreaType::Typed),
+        textarea_input: TextArea::generate(TextAreaType::CSS),
+        textarea_output: TextArea::generate(TextAreaType::Typed),
         is_swapped: false,
     }
 }
@@ -45,16 +45,6 @@ enum TextAreaType {
 }
 
 impl TextArea {
-    fn default(textarea_type: TextAreaType) -> TextArea {
-        Self::generate(textarea_type)
-    }
-    fn swapped(textarea_type: TextAreaType) -> TextArea {
-        if textarea_type == TextAreaType::CSS {
-            Self::generate(TextAreaType::Typed)
-        } else {
-            Self::generate(TextAreaType::Typed)
-        }
-    }
     fn generate(textarea_type: TextAreaType) -> TextArea {
         if textarea_type == TextAreaType::CSS {
             TextArea {
@@ -72,9 +62,7 @@ impl TextArea {
     }
 }
 // ------ ------
-//    Update
-// ------ ------
-
+//    Update1
 enum Msg {
     Transform,
     FirstTextAreaChanged(String),
@@ -90,9 +78,9 @@ fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
     match msg {
         Msg::FirstTextAreaChanged(class_input) => {
             let default = if *is_swapped {
-                TextArea::swapped(TextAreaType::CSS)
+                TextArea::generate(TextAreaType::Typed)
             } else {
-                TextArea::default(TextAreaType::CSS)
+                TextArea::generate(TextAreaType::CSS)
             };
             *textarea_input = TextArea {
                 value: Some(class_input),
@@ -101,9 +89,9 @@ fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
         }
         Msg::SecondTextAreaChanged(class_input) => {
             let default = if *is_swapped {
-                TextArea::swapped(TextAreaType::Typed)
+                TextArea::generate(TextAreaType::CSS)
             } else {
-                TextArea::default(TextAreaType::Typed)
+                TextArea::generate(TextAreaType::Typed)
             };
             *textarea_output = TextArea {
                 value: Some(class_input),
@@ -118,8 +106,8 @@ fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
                 // keep the default
                 *is_swapped = false;
                 (
-                    TextArea::default(TextAreaType::CSS),
-                    TextArea::default(TextAreaType::Typed),
+                    TextArea::generate(TextAreaType::CSS),
+                    TextArea::generate(TextAreaType::Typed),
                 )
             } else {
                 // if not swapped yet
@@ -127,8 +115,8 @@ fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
                 // default_output (Typed) -> CSS
                 *is_swapped = true;
                 (
-                    TextArea::default(TextAreaType::Typed),
-                    TextArea::default(TextAreaType::CSS),
+                    TextArea::generate(TextAreaType::Typed),
+                    TextArea::generate(TextAreaType::CSS),
                 )
             };
             *textarea_input = TextArea {
