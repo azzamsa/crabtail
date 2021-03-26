@@ -16,7 +16,7 @@ use crate::generated::css_classes::C;
 
 fn init(_: Url, _: &mut impl Orders<Msg>) -> Model {
     Model {
-        textarea_input: TextArea::generate(&TextAreaType::CSS),
+        textarea_input: TextArea::generate(&TextAreaType::Css),
         textarea_output: TextArea::generate(&TextAreaType::Typed),
         is_swapped: false,
     }
@@ -40,15 +40,15 @@ struct TextArea {
 
 #[derive(PartialEq)]
 enum TextAreaType {
-    CSS,
+    Css,
     Typed,
 }
 
 impl TextArea {
     fn generate(textarea_type: &TextAreaType) -> Self {
-        if textarea_type == &TextAreaType::CSS {
+        if textarea_type == &TextAreaType::Css {
             Self {
-                label: Some("CSS".to_string()),
+                label: Some("Css".to_string()),
                 placeholder: Some("py-2 text-white hover:bg-yellow-500".to_string()),
                 value: Some("".to_string()),
             }
@@ -82,16 +82,16 @@ fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
             let default = if *is_swapped {
                 TextArea::generate(&TextAreaType::Typed)
             } else {
-                TextArea::generate(&TextAreaType::CSS)
+                TextArea::generate(&TextAreaType::Css)
             };
             *textarea_input = TextArea {
                 value: Some(class_input),
                 ..default
             };
-        },
+        }
         Msg::SecondTextAreaChanged(class_input) => {
             let default = if *is_swapped {
-                TextArea::generate(&TextAreaType::CSS)
+                TextArea::generate(&TextAreaType::Css)
             } else {
                 TextArea::generate(&TextAreaType::Typed)
             };
@@ -99,7 +99,7 @@ fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
                 value: Some(class_input),
                 ..default
             }
-        },
+        }
         Msg::Swap => {
             let textarea_input_value_tmp = textarea_input.value.clone();
             let textarea_output_value_tmp = textarea_output.value.clone();
@@ -108,7 +108,7 @@ fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
                 // keep the default
                 *is_swapped = false;
                 (
-                    TextArea::generate(&TextAreaType::CSS),
+                    TextArea::generate(&TextAreaType::Css),
                     TextArea::generate(&TextAreaType::Typed),
                 )
             } else {
@@ -118,7 +118,7 @@ fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
                 *is_swapped = true;
                 (
                     TextArea::generate(&TextAreaType::Typed),
-                    TextArea::generate(&TextAreaType::CSS),
+                    TextArea::generate(&TextAreaType::Css),
                 )
             };
             *textarea_input = TextArea {
@@ -129,7 +129,7 @@ fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
                 value: Some(textarea_input_value_tmp.unwrap_or_else(|| "".to_string())),
                 ..default_output
             };
-        },
+        }
         Msg::Transform => {
             let value = if *is_swapped {
                 transform::to_css(
@@ -150,7 +150,7 @@ fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
                     textarea_output.placeholder.clone().unwrap_or_else(|| "".to_string()),
                 ),
             };
-        },
+        }
     }
 }
 
