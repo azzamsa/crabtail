@@ -118,7 +118,7 @@ description = "Run tests. Ex: 'cargo make test firefox'. Test envs: [chrome, fir
 install_crate = { crate_name = "wasm-pack", binary = "wasm-pack", test_arg = "-V" }
 command = "wasm-pack"
 args = ["test", "--${@}"]
-dependencies = ["prepare"]
+dependencies = ["prepare_release"]
 
 [tasks.test_cargo]
 description = "Run tests"
