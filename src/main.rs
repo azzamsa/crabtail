@@ -16,8 +16,8 @@ use crate::generated::css_classes::C;
 
 fn init(_: Url, _: &mut impl Orders<Msg>) -> Model {
     Model {
-        textarea_input: TextArea::generate(TextAreaType::CSS),
-        textarea_output: TextArea::generate(TextAreaType::Typed),
+        textarea_input: TextArea::generate(&TextAreaType::CSS),
+        textarea_output: TextArea::generate(&TextAreaType::Typed),
         is_swapped: false,
     }
 }
@@ -45,17 +45,21 @@ enum TextAreaType {
 }
 
 impl TextArea {
-    fn generate(textarea_type: TextAreaType) -> TextArea {
-        if textarea_type == TextAreaType::CSS {
-            TextArea {
+    fn generate(textarea_type: &TextAreaType) -> Self {
+        if textarea_type == &TextAreaType::CSS {
+            Self {
                 label: Some("CSS".to_string()),
-                placeholder: Some("py-2 text-white hover:bg-yellow-500".to_string()),
+                placeholder: Some(
+                    "py-2 text-white hover:bg-yellow-500".to_string(),
+                ),
                 value: Some("".to_string()),
             }
         } else {
-            TextArea {
+            Self {
                 label: Some("Typed".to_string()),
-                placeholder: Some("C.py_2, C.text_white, C.hover__bg_yellow_500".to_string()),
+                placeholder: Some(
+                    "C.py_2, C.text_white, C.hover__bg_yellow_500".to_string(),
+                ),
                 value: Some("".to_string()),
             }
         }
@@ -78,9 +82,9 @@ fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
     match msg {
         Msg::FirstTextAreaChanged(class_input) => {
             let default = if *is_swapped {
-                TextArea::generate(TextAreaType::Typed)
+                TextArea::generate(&TextAreaType::Typed)
             } else {
-                TextArea::generate(TextAreaType::CSS)
+                TextArea::generate(&TextAreaType::CSS)
             };
             *textarea_input = TextArea {
                 value: Some(class_input),
@@ -89,9 +93,9 @@ fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
         }
         Msg::SecondTextAreaChanged(class_input) => {
             let default = if *is_swapped {
-                TextArea::generate(TextAreaType::CSS)
+                TextArea::generate(&TextAreaType::CSS)
             } else {
-                TextArea::generate(TextAreaType::Typed)
+                TextArea::generate(&TextAreaType::Typed)
             };
             *textarea_output = TextArea {
                 value: Some(class_input),
@@ -106,8 +110,8 @@ fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
                 // keep the default
                 *is_swapped = false;
                 (
-                    TextArea::generate(TextAreaType::CSS),
-                    TextArea::generate(TextAreaType::Typed),
+                    TextArea::generate(&TextAreaType::CSS),
+                    TextArea::generate(&TextAreaType::Typed),
                 )
             } else {
                 // if not swapped yet
@@ -115,34 +119,53 @@ fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
                 // default_output (Typed) -> CSS
                 *is_swapped = true;
                 (
-                    TextArea::generate(TextAreaType::Typed),
-                    TextArea::generate(TextAreaType::CSS),
+                    TextArea::generate(&TextAreaType::Typed),
+                    TextArea::generate(&TextAreaType::CSS),
                 )
             };
             *textarea_input = TextArea {
-                value: Some(textarea_output_value_tmp.unwrap_or("".to_string())),
+                value: Some(
+                    textarea_output_value_tmp.unwrap_or_else(|| "".to_string()),
+                ),
                 ..default_input
             };
             *textarea_output = TextArea {
-                value: Some(textarea_input_value_tmp.unwrap_or("".to_string())),
+                value: Some(
+                    textarea_input_value_tmp.unwrap_or_else(|| "".to_string()),
+                ),
                 ..default_output
             };
         }
         Msg::Transform => {
             let value = if *is_swapped {
-                transform::to_css(&textarea_input.value.clone().unwrap_or("".to_string()))
+                transform::to_css(
+                    &textarea_input
+                        .value
+                        .clone()
+                        .unwrap_or_else(|| "".to_string()),
+                )
             } else {
                 // if not swapped yet
-                transform::to_typed(&textarea_input.value.clone().unwrap_or("".to_string()))
+                transform::to_typed(
+                    &textarea_input
+                        .value
+                        .clone()
+                        .unwrap_or_else(|| "".to_string()),
+                )
             };
             *textarea_output = TextArea {
                 value: Some(value),
-                label: Some(textarea_output.label.clone().unwrap_or("".to_string())),
+                label: Some(
+                    textarea_output
+                        .label
+                        .clone()
+                        .unwrap_or_else(|| "".to_string()),
+                ),
                 placeholder: Some(
                     textarea_output
                         .placeholder
                         .clone()
-                        .unwrap_or("".to_string()),
+                        .unwrap_or_else(|| "".to_string()),
                 ),
             };
         }
@@ -220,13 +243,13 @@ fn view(model: &Model) -> impl IntoNodes<Msg> {
                     C![C.flex, C.justify_end],
                     button![
                         C![C.btn, C.mb_6, C.px_3, C.py_1, C.stroke_2],
-                        raw_svg!(icon::get(icon::Name::SwitchVertical)),
+                        raw_svg!(icon::get(&icon::Name::SwitchVertical)),
                         ev(Ev::Click, |_| Msg::Swap),
                     ]
                 ],
                 button![
                     C![C.btn, C.inline_flex, C.justify_center, C.stroke_2],
-                    raw_svg!(icon::get(icon::Name::Rocket)),
+                    raw_svg!(icon::get(&icon::Name::Rocket)),
                     span!["Go"],
                     ev(Ev::Click, |_| Msg::Transform),
                 ],
