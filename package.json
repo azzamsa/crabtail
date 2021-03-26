@@ -4,6 +4,11 @@
   "description": "Convert your TailwindCSS class to typed Rust",
   "author": "Azzam S.A",
   "license": "AGPL-3.0-or-later",
+  "scripts": {
+    "start-server": "trunk serve",
+    "cy:run": "cypress run",
+    "test": "start-server-and-test start-server http://localhost:8080 cy:run"
+  },
   "devDependencies": {
     "//": "to import style file in sub-directory. Unfortunately it need exact filename",
     "@tabler/icons": "^1.39.1",

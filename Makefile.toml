@@ -111,5 +111,5 @@ args = ["test"]
 
 [tasks.test_cypress]
 description = "Run E2E Test"
-command = "cypress"
-args = ["run", "--browser", "${BROWSER}", "--headless"]
+command = "yarn"
+args = ["test"]
