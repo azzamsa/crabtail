@@ -1,3 +1,7 @@
+#![
+    allow(clippy::wildcard_imports) // importing all seed element make life harder
+]
+
 mod generated;
 mod icon;
 mod transform;
@@ -229,13 +233,13 @@ fn view(model: &Model) -> impl IntoNodes<Msg> {
                     C![C.flex, C.justify_end],
                     button![
                         C![C.btn, C.mb_6, C.px_3, C.py_1, C.stroke_2],
-                        raw_svg!(icon::get(icon::IconName::SwitchVertical)),
+                        raw_svg!(icon::get(icon::Name::SwitchVertical)),
                         ev(Ev::Click, |_| Msg::Swap),
                     ]
                 ],
                 button![
                     C![C.btn, C.inline_flex, C.justify_center, C.stroke_2],
-                    raw_svg!(icon::get(icon::IconName::Rocket)),
+                    raw_svg!(icon::get(icon::Name::Rocket)),
                     span!["Go"],
                     ev(Ev::Click, |_| Msg::Transform),
                 ],
