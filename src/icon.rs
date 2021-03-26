@@ -12,7 +12,7 @@ pub const fn get(icon: &Name) -> &'static str {
    <path d="M7 14a6 6 0 0 0 -3 6a6 6 0 0 0 6 -3"></path>
    <circle cx="15" cy="9" r="1"></circle>
 </svg>"#
-        }
+        },
         Name::SwitchVertical => {
             r#"<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-switch-vertical" width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
@@ -21,6 +21,6 @@ pub const fn get(icon: &Name) -> &'static str {
    <polyline points="13 16 17 20 21 16"></polyline>
    <line x1="17" y1="10" x2="17" y2="20"></line>
 </svg>"#
-        }
+        },
     }
 }

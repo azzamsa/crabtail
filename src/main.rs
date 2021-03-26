@@ -49,9 +49,7 @@ impl TextArea {
         if textarea_type == &TextAreaType::CSS {
             Self {
                 label: Some("CSS".to_string()),
-                placeholder: Some(
-                    "py-2 text-white hover:bg-yellow-500".to_string(),
-                ),
+                placeholder: Some("py-2 text-white hover:bg-yellow-500".to_string()),
                 value: Some("".to_string()),
             }
         } else {
@@ -90,7 +88,7 @@ fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
                 value: Some(class_input),
                 ..default
             };
-        }
+        },
         Msg::SecondTextAreaChanged(class_input) => {
             let default = if *is_swapped {
                 TextArea::generate(&TextAreaType::CSS)
@@ -101,7 +99,7 @@ fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
                 value: Some(class_input),
                 ..default
             }
-        }
+        },
         Msg::Swap => {
             let textarea_input_value_tmp = textarea_input.value.clone();
             let textarea_output_value_tmp = textarea_output.value.clone();
@@ -124,51 +122,35 @@ fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
                 )
             };
             *textarea_input = TextArea {
-                value: Some(
-                    textarea_output_value_tmp.unwrap_or_else(|| "".to_string()),
-                ),
+                value: Some(textarea_output_value_tmp.unwrap_or_else(|| "".to_string())),
                 ..default_input
             };
             *textarea_output = TextArea {
-                value: Some(
-                    textarea_input_value_tmp.unwrap_or_else(|| "".to_string()),
-                ),
+                value: Some(textarea_input_value_tmp.unwrap_or_else(|| "".to_string())),
                 ..default_output
             };
-        }
+        },
         Msg::Transform => {
             let value = if *is_swapped {
                 transform::to_css(
-                    &textarea_input
-                        .value
-                        .clone()
-                        .unwrap_or_else(|| "".to_string()),
+                    &textarea_input.value.clone().unwrap_or_else(|| "".to_string()),
                 )
             } else {
                 // if not swapped yet
                 transform::to_typed(
-                    &textarea_input
-                        .value
-                        .clone()
-                        .unwrap_or_else(|| "".to_string()),
+                    &textarea_input.value.clone().unwrap_or_else(|| "".to_string()),
                 )
             };
             *textarea_output = TextArea {
                 value: Some(value),
                 label: Some(
-                    textarea_output
-                        .label
-                        .clone()
-                        .unwrap_or_else(|| "".to_string()),
+                    textarea_output.label.clone().unwrap_or_else(|| "".to_string()),
                 ),
                 placeholder: Some(
-                    textarea_output
-                        .placeholder
-                        .clone()
-                        .unwrap_or_else(|| "".to_string()),
+                    textarea_output.placeholder.clone().unwrap_or_else(|| "".to_string()),
                 ),
             };
-        }
+        },
     }
 }
 
@@ -178,15 +160,7 @@ fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
 
 fn view(model: &Model) -> impl IntoNodes<Msg> {
     vec![section![
-        C![
-            C.bg_main,
-            C.pt_12,
-            C.md__pt_20,
-            C.pb_6,
-            C.px_2,
-            C.md__px_5,
-            C.min_h_screen
-        ],
+        C![C.bg_main, C.pt_12, C.md__pt_20, C.pb_6, C.px_2, C.md__px_5, C.min_h_screen],
         header![
             C![C.max_w_lg, C.mx_auto],
             h1![C![C.font_bold, C.text_white C.text_center], "CrabTail"]
