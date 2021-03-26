@@ -1,5 +1,6 @@
 [env]
 PORT = "8080"
+BROWSER ="/usr/local/bin/firefox-dev"
 
 [config]
 skip_core_tasks = true
@@ -8,7 +9,7 @@ skip_core_tasks = true
 
 [tasks.verify]
 description = "Format, lint with Clippy and run tests"
-dependencies = ["fmt", "clippy", "test_cargo" ,"fmt_prettier"]
+dependencies = ["fmt", "clippy", "test_cargo" ,"fmt_prettier", "test_cypress"]
 script = [
     "echo 'Ready to deploy 🚀'"
 ]
@@ -124,3 +125,8 @@ dependencies = ["prepare_release"]
 description = "Run tests"
 command = "cargo"
 args = ["test"]
+
+[tasks.test_cypress]
+description = "Run E2E Test"
+command = "cypress"
+args = ["run", "--browser", "${BROWSER}", "--headless"]

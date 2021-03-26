@@ -8,3 +8,8 @@ wasm-pack.log
 src/generated/css_classes.rs
 
 asset/sass/compiled.scss
+
+
+cypress/
+!cypress/integration/
+!cypress/fixture/

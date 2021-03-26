@@ -48,7 +48,7 @@ impl TextArea {
     fn generate(textarea_type: &TextAreaType) -> Self {
         if textarea_type == &TextAreaType::Css {
             Self {
-                label: Some("Css".to_string()),
+                label: Some("CSS".to_string()),
                 placeholder: Some("py-2 text-white hover:bg-yellow-500".to_string()),
                 value: Some("".to_string()),
             }
@@ -88,7 +88,7 @@ fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
                 value: Some(class_input),
                 ..default
             };
-        },
+        }
         Msg::SecondTextAreaChanged(class_input) => {
             let default = if *is_swapped {
                 TextArea::generate(&TextAreaType::Css)
@@ -99,7 +99,7 @@ fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
                 value: Some(class_input),
                 ..default
             }
-        },
+        }
         Msg::Swap => {
             let textarea_input_value_tmp = textarea_input.value.clone();
             let textarea_output_value_tmp = textarea_output.value.clone();
@@ -129,7 +129,7 @@ fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
                 value: Some(textarea_input_value_tmp.unwrap_or_else(|| "".to_string())),
                 ..default_output
             };
-        },
+        }
         Msg::Transform => {
             let value = if *is_swapped {
                 transform::to_css(
@@ -150,7 +150,7 @@ fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
                     textarea_output.placeholder.clone().unwrap_or_else(|| "".to_string()),
                 ),
             };
-        },
+        }
     }
 }
 
@@ -192,13 +192,13 @@ fn view(model: &Model) -> impl IntoNodes<Msg> {
             section![
                 C![C.flex, C.flex_col, C.mt_10],
                 div![
+                    id!["input"],
                     C![C.mb_6, C.pt_3, C.rounded, C.bg_gray_200],
                     label![
                         C![C.input_label],
                         &model.textarea_input.label.as_deref().unwrap_or("")
                     ],
                     textarea![
-                        id!["css"],
                         attrs! {
                             At::Type => "text",
                             At::Placeholder => &model.textarea_input.placeholder.as_deref().unwrap_or("");
@@ -209,10 +209,10 @@ fn view(model: &Model) -> impl IntoNodes<Msg> {
                     ]
                 ],
                 div![
+                    id!["output"],
                     C![C.mb_6, C.pt_3, C.rounded, C.bg_gray_200],
                     label![C![C.input_label], &model.textarea_output.label],
                     textarea![
-                        id!["typed"],
                         attrs! {
                             At::Type => "text";
                             At::Placeholder => &model.textarea_output.placeholder.as_deref().unwrap_or("");
@@ -225,12 +225,14 @@ fn view(model: &Model) -> impl IntoNodes<Msg> {
                 div![
                     C![C.flex, C.justify_end],
                     button![
+                        id!["swap-btn"],
                         C![C.btn, C.mb_6, C.px_3, C.py_1, C.stroke_2],
                         raw_svg!(icon::get(&icon::Name::SwitchVertical)),
                         ev(Ev::Click, |_| Msg::Swap),
                     ]
                 ],
                 button![
+                    id!["go-btn"],
                     C![C.btn, C.inline_flex, C.justify_center, C.stroke_2],
                     raw_svg!(icon::get(&icon::Name::Rocket)),
                     span!["Go"],

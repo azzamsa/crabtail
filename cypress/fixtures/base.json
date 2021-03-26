@@ -1,0 +1,12 @@
+{
+  "css": {
+    "label": "CSS",
+    "placeholder": "py-2 text-white hover:bg-yellow-500",
+    "value": "py-2"
+  },
+  "typed": {
+    "label": "Typed",
+    "placeholder": "C.py_2, C.text_white, C.hover__bg_yellow_500",
+    "value": "C.py_2"
+  }
+}

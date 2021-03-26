@@ -10,6 +10,7 @@ packages:
   - pkg-config
   - libssl-dev
   - unzip
+  - firefox
 
 environment:
   project: crabtail
@@ -92,7 +93,7 @@ tasks:
 
   - test: |
       cd ${project}
-      cargo make is_verified
+      cargo make is_verified -env BROWSER=firefox
 
   - check_rules: |
       git branch --contains | grep master || echo "Build stopped. Not on master branch"
