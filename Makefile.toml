@@ -9,14 +9,14 @@ skip_core_tasks = true
 
 [tasks.verify]
 description = "Format, lint with Clippy and run tests"
-dependencies = ["fmt", "clippy", "test_cargo" ,"fmt_prettier", "test_cypress"]
+dependencies = ["fmt", "clippy" ,"fmt_prettier", "test_cargo", "test_cypress"]
 script = [
     "echo 'Ready to deploy 🚀'"
 ]
 
 [tasks.is_verified]
 description = "Like `verify`, but fails if the code isn't formatted. Primarily for CI."
-dependencies = ["fmt_check", "clippy", "test_cargo", "fmt_prettier_check", "test_h_firefox"]
+dependencies = ["fmt_check", "clippy" ,"fmt_prettier_check", "test_cargo", "test_cypress"]
 
 # ---- BASIC ----
 
@@ -103,23 +103,6 @@ extend = "prettier"
 env = { option = "--check" }
 
 # ---- TEST ----
-
-[tasks.test_h_firefox]
-description = "Run headless tests with Firefox."
-extend = "test"
-args = ["test", "--headless", "--firefox"]
-
-[tasks.test_h]
-description = "Run headless tests. Ex: 'cargo make test_h firefox'. Test envs: [chrome, firefox, safari]"
-extend = "test"
-args = ["test", "--headless", "--${@}"]
-
-[tasks.test]
-description = "Run tests. Ex: 'cargo make test firefox'. Test envs: [chrome, firefox, safari]"
-install_crate = { crate_name = "wasm-pack", binary = "wasm-pack", test_arg = "-V" }
-command = "wasm-pack"
-args = ["test", "--${@}"]
-dependencies = ["prepare_release"]
 
 [tasks.test_cargo]
 description = "Run tests"
