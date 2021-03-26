@@ -3,7 +3,7 @@ pub enum Name {
     SwitchVertical,
 }
 
-pub fn get(icon: Name) -> &'static str {
+pub const fn get(icon: &Name) -> &'static str {
     match icon {
         Name::Rocket => {
             r#"<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-rocket" width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
