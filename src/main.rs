@@ -88,7 +88,7 @@ fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
                 value: Some(class_input),
                 ..default
             };
-        },
+        }
         Msg::SecondTextAreaChanged(class_input) => {
             let default = if *is_swapped {
                 TextArea::generate(&TextAreaType::Css)
@@ -99,7 +99,7 @@ fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
                 value: Some(class_input),
                 ..default
             }
-        },
+        }
         Msg::Swap => {
             let textarea_input_value_tmp = textarea_input.value.clone();
             let textarea_output_value_tmp = textarea_output.value.clone();
@@ -129,7 +129,7 @@ fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
                 value: Some(textarea_input_value_tmp.unwrap_or_else(|| "".to_string())),
                 ..default_output
             };
-        },
+        }
         Msg::Transform => {
             let value = if *is_swapped {
                 transform::to_css(
@@ -150,7 +150,7 @@ fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
                     textarea_output.placeholder.clone().unwrap_or_else(|| "".to_string()),
                 ),
             };
-        },
+        }
     }
 }
 
@@ -249,7 +249,21 @@ fn view(model: &Model) -> impl IntoNodes<Msg> {
                 C.text_white,
                 C.font_medium
             ],
-            a![C![C.hover__underline], attrs! {At::Href => "#"}, "Support Me"],
+            a![
+                C![
+                    C.duration_500,
+                    C.transform,
+                    C.hover___translate_y_1,
+                    C.hover__scale_125,
+                    C.hover__underline,
+                ],
+                attrs! {At::Href => "#"},
+                "Support Me",
+                i![
+                    C![C.inline_block, C.mx_1, C.align_middle C.w_4, C.h_4],
+                    raw_svg!(icon::get(&icon::Name::SparklingHeart))
+                ],
+            ],
             span![C![C.mx_3], "•"],
             a![C![C.hover__underline], attrs! {At::Href => "#"}, "Meta"],
         ],
