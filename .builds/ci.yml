@@ -102,6 +102,7 @@ tasks:
       cargo make is_verified
 
   - check_rules: |
+      cd ${project}
       git branch --contains | grep master || echo "Build stopped. Not on master branch"
       # complete-build is sr.ht bash function
       git branch --contains | grep master || complete-build
