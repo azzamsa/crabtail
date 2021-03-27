@@ -64,7 +64,9 @@ impl TextArea {
     }
 }
 // ------ ------
-//    Update1
+//    Update
+// ------ ------
+
 enum Msg {
     Transform,
     FirstTextAreaChanged(String),
@@ -88,7 +90,7 @@ fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
                 value: Some(class_input),
                 ..default
             };
-        }
+        },
         Msg::SecondTextAreaChanged(class_input) => {
             let default = if *is_swapped {
                 TextArea::generate(&TextAreaType::Css)
@@ -99,7 +101,7 @@ fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
                 value: Some(class_input),
                 ..default
             }
-        }
+        },
         Msg::Swap => {
             let textarea_input_value_tmp = textarea_input.value.clone();
             let textarea_output_value_tmp = textarea_output.value.clone();
@@ -129,7 +131,7 @@ fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
                 value: Some(textarea_input_value_tmp.unwrap_or_else(|| "".to_string())),
                 ..default_output
             };
-        }
+        },
         Msg::Transform => {
             let value = if *is_swapped {
                 transform::to_css(
@@ -150,7 +152,7 @@ fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
                     textarea_output.placeholder.clone().unwrap_or_else(|| "".to_string()),
                 ),
             };
-        }
+        },
     }
 }
 
@@ -158,6 +160,7 @@ fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
 //     View
 // ------ ------
 
+#[allow(clippy::too_many_lines)]
 fn view(model: &Model) -> impl IntoNodes<Msg> {
     vec![section![
         C![C.bg_main, C.pt_12, C.md__pt_20, C.pb_6, C.px_2, C.md__px_5, C.min_h_screen],
@@ -264,7 +267,7 @@ fn view(model: &Model) -> impl IntoNodes<Msg> {
                     raw_svg!(icon::get(&icon::Name::SparklingHeart))
                 ],
             ],
-            span![C![C.mx_3], "•"],
+            span![C![C.mx_3], "\u{2022}"],
             a![C![C.hover__underline], attrs! {At::Href => "#"}, "Meta"],
         ],
     ]]
