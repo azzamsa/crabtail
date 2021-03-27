@@ -7,7 +7,8 @@
   "scripts": {
     "start-server": "trunk serve",
     "cy:run": "cypress run",
-    "test": "start-server-and-test start-server http://localhost:8080 cy:run"
+    "test": "start-server-and-test start-server http://localhost:8080 cy:run",
+    "prepare:dev": "npx postcss --config configs/postcss.config.js asset/sass/main.scss --output asset/sass/compiled.scss --env development"
   },
   "devDependencies": {
     "//": "to import style file in sub-directory. Unfortunately it need exact filename",

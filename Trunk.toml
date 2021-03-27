@@ -1,10 +1,2 @@
-[build]
-target = "public/index.html"
-dist = "dist"
-
 [clean]
-dist = "dist"
 cargo = true
-
-[watch]
-watch = ["."]
