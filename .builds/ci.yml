@@ -10,7 +10,11 @@ packages:
   - pkg-config
   - libssl-dev
   - unzip
+  # cypress needs these
   - firefox
+  - xvfb
+  - libnss3
+  - libgbm-dev
 
 environment:
   project: crabtail
