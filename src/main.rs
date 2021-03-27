@@ -240,6 +240,19 @@ fn view(model: &Model) -> impl IntoNodes<Msg> {
                 ],
             ],
         ],
+        footer![
+            C![
+                C.max_w_lg,
+                C.mx_auto,
+                C.flex,
+                C.justify_center,
+                C.text_white,
+                C.font_medium
+            ],
+            a![C![C.hover__underline], attrs! {At::Href => "#"}, "Support Me"],
+            span![C![C.mx_3], "•"],
+            a![C![C.hover__underline], attrs! {At::Href => "#"}, "Meta"],
+        ],
     ]]
 }
 
