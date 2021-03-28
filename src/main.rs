@@ -38,7 +38,6 @@ struct Model {
 // ------ ------
 
 enum Msg {
-    Transform,
     TextAreaInputChanged(String),
     TextAreaOutputChanged(String),
     Swap,
@@ -47,6 +46,7 @@ enum Msg {
 fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
     match msg {
         Msg::TextAreaInputChanged(value) => {
+            model.text_area_output.set_transformed_value(&value);
             model.text_area_input.set_value(value)
         },
         Msg::TextAreaOutputChanged(value) => {
@@ -54,8 +54,6 @@ fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
         },
         Msg::Swap => {
             mem::swap(&mut model.text_area_input, &mut model.text_area_output);
-        },
-        Msg::Transform => {
             let input = model.text_area_input.value();
             model.text_area_output.set_transformed_value(input);
         },
@@ -111,9 +109,8 @@ fn view_control_panel(text_area_input: &Box<dyn TextArea>, text_area_output: &Bo
     section![
         C![C.flex, C.flex_col, C.mt_10],
         view_text_area(text_area_input, "input", Msg::TextAreaInputChanged),
-        view_text_area(text_area_output, "output", Msg::TextAreaOutputChanged),
         div![
-            C![C.flex, C.justify_end],
+            C![C.flex, C.justify_center],
             button![
                 id!["swap-btn"],
                 C![C.btn, C.mb_6, C.px_3, C.py_1, C.stroke_2],
@@ -121,13 +118,7 @@ fn view_control_panel(text_area_input: &Box<dyn TextArea>, text_area_output: &Bo
                 ev(Ev::Click, |_| Msg::Swap),
             ]
         ],
-        button![
-            id!["go-btn"],
-            C![C.btn, C.inline_flex, C.justify_center, C.stroke_2],
-            raw_svg!(icon::get(&icon::Name::Rocket)),
-            span!["Go"],
-            ev(Ev::Click, |_| Msg::Transform),
-        ],
+        view_text_area(text_area_output, "output", Msg::TextAreaOutputChanged),
     ]
 }
 
