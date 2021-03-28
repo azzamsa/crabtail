@@ -1,28 +1,19 @@
-use voca_rs::{manipulate, split};
-
 pub fn to_typed(input: &str) -> String {
-    let classes = split::split(input, " ");
-    let classes_underscored = classes
-        .iter()
-        .map(|&x| manipulate::replace_all(x, "-", "_"))
-        .map(|x| manipulate::replace_all(&x, ":", "__"))
-        .collect::<Vec<_>>();
-    let classes_with_c = classes_underscored
-        .iter()
-        .map(|x| manipulate::insert(x, "C.", 0))
-        .collect::<Vec<_>>();
-    classes_with_c.join(", ")
+    input.split_whitespace().map(|word| {
+        let name = word
+            .replace("-", "_")
+            .replace(":", "__");
+        format!("C.{}", name)
+    }).collect::<Vec<_>>().join(", ")
+    // @TODO: replace with  `}).intersperse(", ").collect()` once `Iterator::intersperse` is stable
 }
 
 pub fn to_css(input: &str) -> String {
-    let classes = split::split(input, ",");
-    let classes_underscored = classes
-        .iter()
-        .map(|x| manipulate::replace_all(x, "__", ":"))
-        .map(|x| manipulate::replace_all(&x, "_", "-"))
-        .map(|x| manipulate::replace_all(&x, "C.", ""))
-        .collect::<Vec<_>>();
-    classes_underscored.join("")
+    input
+        .replace(",", "")
+        .replace("__", ":")
+        .replace("_", "-")
+        .replace("C.", "")
 }
 
 #[cfg(test)]
